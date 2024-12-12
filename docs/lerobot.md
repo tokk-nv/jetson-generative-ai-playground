@@ -201,7 +201,7 @@ sudo systemctl disable nvzramconfi
 sudo fallocate -l 8G /ssd/8GB.swap
 sudo chmod 600 /ssd/8GB.swap
 sudo mkswap /ssd/8GB.swap
-sudo echo "/ssd/8GB.swap swap swap defaults 0 0" >> /etc/fstab
+echo "/ssd/8GB.swap swap swap defaults 0 0" | sudo tee -a /etc/fstab
 sudo reboot
 ```
 
