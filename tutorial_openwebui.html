@@ -5,12 +5,12 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <meta content="Showcasing generative AI projects that run on Jetson" name="description"/>
-  <link href="tutorial_holoscan.html" rel="prev"/>
-  <link href="tutorial_gapi_workflows.html" rel="next"/>
+  <link href="tutorial_ollama.html" rel="prev"/>
+  <link href="tutorial_llamaspeak.html" rel="next"/>
   <link href="images/nvidia-favicon-rgb-16x16px@2x.png" rel="icon"/>
   <meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
   <title>
-   Jetson Platform Services - NVIDIA Jetson AI Lab
+   Open WebUI - NVIDIA Jetson AI Lab
   </title>
   <link href="assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
   <link href="assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
@@ -38,7 +38,7 @@
   <label class="md-overlay" for="__drawer">
   </label>
   <div data-md-component="skip">
-   <a class="md-skip" href="#tutorial-jetson-platform-services">
+   <a class="md-skip" href="#tutorial-open-webui">
     Skip to content
    </a>
   </div>
@@ -67,7 +67,7 @@
       </div>
       <div class="md-header__topic" data-md-component="header-topic">
        <span class="md-ellipsis">
-        Jetson Platform Services
+        Open WebUI
        </span>
       </div>
      </div>
@@ -216,8 +216,8 @@
                </span>
               </a>
              </li>
-             <li class="md-nav__item md-nav__item--nested">
-              <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_4" type="checkbox"/>
+             <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+              <input checked="" class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
               <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
                <span class="md-ellipsis">
                 Text (LLM)
@@ -225,7 +225,7 @@
                <span class="md-nav__icon md-icon">
                </span>
               </label>
-              <nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+              <nav aria-expanded="true" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
                <label class="md-nav__title" for="__nav_2_4">
                 <span class="md-nav__icon md-icon">
                 </span>
@@ -246,12 +246,43 @@
                   </span>
                  </a>
                 </li>
-                <li class="md-nav__item">
-                 <a class="md-nav__link" href="tutorial_openwebui.html">
+                <li class="md-nav__item md-nav__item--active">
+                 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+                 <label class="md-nav__link md-nav__link--active" for="__toc">
+                  <span class="md-ellipsis">
+                   Open WebUI
+                  </span>
+                  <span class="md-nav__icon md-icon">
+                  </span>
+                 </label>
+                 <a class="md-nav__link md-nav__link--active" href="tutorial_openwebui.html">
                   <span class="md-ellipsis">
                    Open WebUI
                   </span>
                  </a>
+                 <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+                  <label class="md-nav__title" for="__toc">
+                   <span class="md-nav__icon md-icon">
+                   </span>
+                   Table of contents
+                  </label>
+                  <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#ollama-server">
+                     <span class="md-ellipsis">
+                      Ollama Server
+                     </span>
+                    </a>
+                   </li>
+                   <li class="md-nav__item">
+                    <a class="md-nav__link" href="#ollama-backend">
+                     <span class="md-ellipsis">
+                      Ollama backend
+                     </span>
+                    </a>
+                   </li>
+                  </ul>
+                 </nav>
                 </li>
                 <li class="md-nav__item">
                  <a class="md-nav__link" href="tutorial_llamaspeak.html">
@@ -523,8 +554,8 @@
                </ul>
               </nav>
              </li>
-             <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-              <input checked="" class="md-nav__toggle md-toggle" id="__nav_2_10" type="checkbox"/>
+             <li class="md-nav__item md-nav__item--nested">
+              <input class="md-nav__toggle md-toggle" id="__nav_2_10" type="checkbox"/>
               <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
                <span class="md-ellipsis">
                 SDK Integrations
@@ -532,7 +563,7 @@
                <span class="md-nav__icon md-icon">
                </span>
               </label>
-              <nav aria-expanded="true" aria-labelledby="__nav_2_10_label" class="md-nav" data-md-level="2">
+              <nav aria-expanded="false" aria-labelledby="__nav_2_10_label" class="md-nav" data-md-level="2">
                <label class="md-nav__title" for="__nav_2_10">
                 <span class="md-nav__icon md-icon">
                 </span>
@@ -546,9 +577,8 @@
                   </span>
                  </a>
                 </li>
-                <li class="md-nav__item md-nav__item--active">
-                 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-                 <a class="md-nav__link md-nav__link--active" href="tutorial_jps.html">
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="tutorial_jps.html">
                   <span class="md-ellipsis">
                    Jetson Platform Services
                   </span>
@@ -698,24 +728,51 @@
       <div class="md-sidebar__scrollwrap">
        <div class="md-sidebar__inner">
         <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+         <label class="md-nav__title" for="__toc">
+          <span class="md-nav__icon md-icon">
+          </span>
+          Table of contents
+         </label>
+         <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="#ollama-server">
+            <span class="md-ellipsis">
+             Ollama Server
+            </span>
+           </a>
+          </li>
+          <li class="md-nav__item">
+           <a class="md-nav__link" href="#ollama-backend">
+            <span class="md-ellipsis">
+             Ollama backend
+            </span>
+           </a>
+          </li>
+         </ul>
         </nav>
        </div>
       </div>
      </div>
      <div class="md-content" data-md-component="content">
       <article class="md-content__inner md-typeset">
-       <h1 id="tutorial-jetson-platform-services">
-        Tutorial - Jetson Platform Services
+       <h1 id="tutorial-open-webui">
+        Tutorial - Open WebUI
        </h1>
        <p>
-        Jetson Plaform Services (JPS) provide a platform to simplify development, deployment and management of Edge AI applications on NVIDIA Jetson. JPS is a modular &amp; extensible architecture for developers to distill large complex applications into smaller modular microservice with APIs to integrate into other apps &amp; services. At its core are a collection of AI services leveraging generative AI, deep learning, and analytics, which provide state of the art capabilities including video analytics, video understanding and summarization, text based prompting, zero shot detection and spatio temporal analysis of object movement.
+        <a href="https://github.com/ollama/ollama" target="_blank">
+         Open WebUI
+        </a>
+        is a versatile, browser-based interface for running and managing large language models (LLMs) locally, offering Jetson developers an intuitive platform to experiment with LLMs on their devices.
        </p>
        <p>
-        <img alt="VLM Workflow" src="images/jps_vlm_workflow.gif"/>
-        <em>
-         VLM Alert Workflow built with JPS
-        </em>
+        It can work with Ollama as a backend as well as other backend that is compatible with OpenAI, which can also run well on Jetson.
        </p>
+       <p>
+        <img alt="alt text" src="images/open_webui_on_desktop.png"/>
+       </p>
+       <h2 id="ollama-server">
+        Ollama Server
+       </h2>
        <div class="admonition abstract">
         <p class="admonition-title">
          What you need
@@ -735,7 +792,7 @@
            <span class="blobLightGreen3">
             Jetson Orin NX (16GB)
            </span>
-           <span class="blobLightGreen4">
+           <span class="blobLightGreen3">
             Jetson Orin Nano (8GB)
            </span>
           </p>
@@ -743,12 +800,15 @@
          <li>
           <p>
            Running one of the following versions of
-           <a href="https://developer.nvidia.com/embedded/jetpack">
+           <a href="https://developer.nvidia.com/embedded/jetpack" target="_blank">
             JetPack
            </a>
            :
           </p>
           <p>
+           <span class="blobPink1">
+            JetPack 5 (L4T r35.x)
+           </span>
            <span class="blobPink2">
             JetPack 6 (L4T r36.x)
            </span>
@@ -758,66 +818,48 @@
           <p>
            Sufficient storage space (preferably with NVMe SSD).
           </p>
+          <ul>
+           <li>
+            <code>
+             7GB
+            </code>
+            for
+            <code>
+             open-webui
+            </code>
+            container image
+           </li>
+          </ul>
          </li>
         </ol>
        </div>
+       <div class="highlight">
+        <pre><span></span><code>sudo docker run -d --network=host \
+    -v ${HOME}/open-webui:/app/backend/data \
+    -e OLLAMA_BASE_URL=http://127.0.0.1:11434 \
+    --name open-webui \
+    --restart always \ 
+    ghcr.io/open-webui/open-webui:main
+</code></pre>
+       </div>
+       <h2 id="ollama-backend">
+        Ollama backend
+       </h2>
        <p>
-        To get started with Jetson Platform Services, follow the quickstart guide to install and setup JPS. Then explore the reference workflows to learn how to use DeepStream, Analytics, Generative AI and more with JPS:
-       </p>
-       <p>
-        1)
-        <a href="https://docs.nvidia.com/jetson/jps/setup/quick-start.html">
-         Quick Start Guide
+        If you
+        <a href="./tutorial_ollama.html">
+         have installed Ollama
         </a>
-        <br/>
-        2)
-        <a href="https://docs.nvidia.com/jetson/jps/setup/ai-nvr.html">
-         AI Powered Network Video Recorder
-        </a>
-        <br/>
-        3)
-        <a href="https://docs.nvidia.com/jetson/jps/workflows/zero_shot_detection_workflow.html">
-         Zero Shot Detection with NanoOWL
-        </a>
-        <br/>
-        4)
-        <a href="https://docs.nvidia.com/jetson/jps/workflows/vlm_workflow.html">
-         Visual Language Model Alerts
-        </a>
+        , you can just run the Open WebUI docker container without installing any other things.
        </p>
-       <p>
-        The reference workflows demonstrate how to use the microservices provided in JPS to build full end to end systems on your Jetson.
-       </p>
-       <p>
-        <img alt="JPS VLM Workflow" src="images/jps_vlm_workflow.png"/>
-        <em>
-         VLM Alert Workflow Architecture
-        </em>
-       </p>
-       <p>
-        View the links below to learn more about Jetson Platform Services:
-        <br/>
-        <em>
-         <a href="https://developer.nvidia.com/blog/develop-generative-ai-powered-visual-ai-agents-for-the-edge/">
-          VLM Alert Blog
-         </a>
-         <br/>
-        </em>
-        <a href="https://developer.nvidia.com/embedded/jetpack/jetson-platform-services-get-started">
-         JPS Product Page
-        </a>
-        <br/>
-        <em>
-         <a href="https://docs.nvidia.com/jetson/jps/moj-overview.html">
-          JPS Documentation
-         </a>
-         <br/>
-        </em>
-        VLM Alert Demo Video
-       </p>
-       <div>
-        <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="280" src="https://www.youtube.com/embed/0ZbDzaBfsrw" style="display: inline-block;" title="YouTube video player" width="500">
-        </iframe>
+       <div class="highlight">
+        <pre><span></span><code>sudo docker run -d --network=host \
+    -v ${HOME}/open-webui:/app/backend/data \
+    -e OLLAMA_BASE_URL=http://127.0.0.1:11434 \
+    --name open-webui \
+    --restart always \ 
+    ghcr.io/open-webui/open-webui:main
+</code></pre>
        </div>
       </article>
      </div>
