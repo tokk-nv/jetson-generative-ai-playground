@@ -42,6 +42,45 @@
    </a>
   </div>
   <div data-md-component="announce">
+   <aside class="md-banner">
+    <div class="md-banner__inner md-grid md-typeset">
+     <button aria-label="Don't show this again" class="md-banner__button md-icon">
+      <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+       <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+       </path>
+      </svg>
+     </button>
+     <style>
+      .md-announce a { color: #76b900; text-decoration: underline;}
+    .md-announce a:focus { color: hsl(82, 100%, 72%);  text-decoration: underline; }
+    .md-announce a:hover { color: hsl(82, 100%, 72%); text-decoration: underline;}
+     </style>
+     <div class="md-announce">
+      ⛄❄️
+      <b>
+       Jetson Orin Nano Super
+      </b>
+      now available for $249
+      <span style="opacity: 0.875">
+       (upgrade your Orin Nano with
+       <a href="https://developer.nvidia.com/embedded/jetpack">
+        JetPack
+       </a>
+       for up to 1.7X performance - see our
+       <a href="https://developer.nvidia.com/blog/nvidia-jetson-orin-nano-developer-kit-gets-a-super-boost/?ncid=so-othe-293081-vt48" target="_blank">
+        blog
+       </a>
+       for more info)
+      </span>
+     </div>
+     <!--<div class="md-announce">The next research group meeting is on <a href="research.html#meeting-schedule">May 15th</a> at 9am PT! Catch up on the <a href="research.html#past-meetings">recordings</a> of the recent meetings.</div>-->
+     <!--<div class="md-announce">Congratulations to all the winners and participants of the <a href="https://blogs.nvidia.com/blog/glados-robot-hackster/" target="_blank">Hackster.io AI Innovation Challenge!</a></div>-->
+     <!--<div class="md-announce">Microsoft's open <a href="https://blogs.nvidia.com/blog/microsoft-open-phi-3-mini-language-models/" target="_blank">Phi-3 Mini</a> language models are out!  Try them today on Jetson with <a href="tutorial_ollama.html">ollama</a>.</div>-->
+    </div>
+    <script>
+     var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}
+    </script>
+   </aside>
   </div>
   <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
    <nav aria-label="Header" class="md-header__inner md-grid">
@@ -392,6 +431,13 @@
                   </span>
                  </a>
                 </li>
+                <li class="md-nav__item">
+                 <a class="md-nav__link" href="tutorial_distillation.html">
+                  <span class="md-ellipsis">
+                   📑 Knowledge Distillation
+                  </span>
+                 </a>
+                </li>
                </ul>
               </nav>
              </li>
@@ -620,7 +666,7 @@
               <input class="md-nav__toggle md-toggle" id="__nav_2_12" type="checkbox"/>
               <label class="md-nav__link" for="__nav_2_12" id="__nav_2_12_label" tabindex="0">
                <span class="md-ellipsis">
-                Tips
+                Jetson Orin Nano Guide
                </span>
                <span class="md-nav__icon md-icon">
                </span>
@@ -629,13 +675,13 @@
                <label class="md-nav__title" for="__nav_2_12">
                 <span class="md-nav__icon md-icon">
                 </span>
-                Tips
+                Jetson Orin Nano Guide
                </label>
                <ul class="md-nav__list" data-md-scrollfix="">
                 <li class="md-nav__item">
-                 <a class="md-nav__link" href="tutorial_distillation.html">
+                 <a class="md-nav__link" href="initial_setup_jon.html">
                   <span class="md-ellipsis">
-                   📑 Knowledge Distillation
+                   🚀 Initial Setup Guide
                   </span>
                  </a>
                 </li>
@@ -650,13 +696,6 @@
                  <a class="md-nav__link" href="tips_ram-optimization.html">
                   <span class="md-ellipsis">
                    🔖 Memory optimization
-                  </span>
-                 </a>
-                </li>
-                <li class="md-nav__item">
-                 <a class="md-nav__link" href="initial_setup_jon.html">
-                  <span class="md-ellipsis">
-                   🚅 Initial Setup Guide - Jetson Orin Nano
                   </span>
                  </a>
                 </li>
@@ -819,11 +858,16 @@
        </p>
        <div class="admonition abstract">
         <p class="admonition-title">
-         Next Meeting - 12/10
+         Next Meeting - 1/7
         </p>
         <p>
          <!--The next team meeting is on Tuesday, June 11<sup>th</sup> at 9am PST.  View the <a href="#past-meetings">recording</a> from the last meeting below.-->
-         The next team meeting is on Tuesday, December 10
+         With holiday schedules soon taking effect, we will reconvene in 2025 - thank you everyone for an amazing year!
+         <br/>
+         <br/>
+         In the meantime, enjoy the time with your families, and feel welcome to keep in touch through the forums, Discord, or LinkedIn.
+         <br/>
+         The next team meeting is on Tuesday, January 7
          <sup>
           th
          </sup>
@@ -979,11 +1023,11 @@
        </p>
        <div class="admonition abstract">
         <p class="admonition-title">
-         Tuesday December 10
+         Tuesday January 7
          <sup>
           th
          </sup>
-         at 9am PST (12/10/24)
+         at 9am PST (1/7/24)
         </p>
         <ul>
          <li>
@@ -1037,64 +1081,48 @@
        </h2>
        <details open="">
         <summary>
-         November 12, 2024
+         Recordings Archive
         </summary>
         <div>
-         <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="476" src="https://www.youtube.com/embed/3QxRUdgnbJw" style="margin-top: 1em;" title="YouTube video player" width="850">
-         </iframe>
+         <br/>
+         Due to a backlog of editing/posting the previous meetings, here is a link containing the raw footage:
+         <br/>
+         <ul>
+          <li>
+           <code>
+            <a href="https://drive.google.com/drive/folders/18BC7o32jorx_LzZXx5wW0Io_nf1ZwO6X?usp=sharing" target="_blank">
+             https://drive.google.com/drive/folders/18BC7o32jorx_LzZXx5wW0Io_nf1ZwO6X?usp=sharing
+            </a>
+           </code>
+           <br/>
+          </li>
+         </ul>
         </div>
-        <p>
-         Topics Covered:
-        </p>
-        <ul>
-         <li>
-          <a href="https://github.com/robosoft-ai/SMACC2" target="_blank">
-           SMACC in Isaac Sim
-          </a>
-          (Brett Aldrich,
-          <a href="https://robosoft.ai/">
-           robosoft.ai
-          </a>
-          )
-         </li>
-         <li>
-          <a href="https://medium.com/@kabilankb2003" target="_blank">
-           Kaya sim2real Agents
-          </a>
-          (Kabilan Kb,
-          <a href="https://www.nvidia.com/en-us/training/instructor-directory/bio/?instructorId=0038Z00003UGyF9QAL">
-           DLI Instructor
-          </a>
-          )
-         </li>
-        </ul>
        </details>
-       <details open="">
-        <summary>
-         October 29, 2024
-        </summary>
-        <div>
-         <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" height="476" src="https://www.youtube.com/embed/-C43j2HgQdY" style="margin-top: 1em;" title="YouTube video player" width="850">
-         </iframe>
-        </div>
-        <p>
-         Topics Covered:
-        </p>
-        <ul>
-         <li>
-          <a href="https://github.com/nasa-jpl/rosa" target="_blank">
-           ROSA Connector for Isaac Sim
-          </a>
-          (Rob Royce, NASA JPL)
-         </li>
-         <li>
-          <a href="https://oasisproject.net/" target="_blank">
-           The OASIS Project: A Technical Brief
-          </a>
-          (Kris Kersey, Kersey Fabrications)
-         </li>
-        </ul>
-       </details>
+       <!--<details open><summary>November 12, 2024</summary>
+
+<div><iframe width="850" height="476" src="https://www.youtube.com/embed/3QxRUdgnbJw" style="margin-top: 1em;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+<p>Topics Covered:</p>
+
+<ul>
+    <li><a href="https://github.com/robosoft-ai/SMACC2" target="_blank">SMACC in Isaac Sim</a> (Brett Aldrich, <a href="https://robosoft.ai/">robosoft.ai</a>)</li>
+    <li><a href="https://medium.com/@kabilankb2003" target="_blank">Kaya sim2real Agents</a> (Kabilan Kb, <a href="https://www.nvidia.com/en-us/training/instructor-directory/bio/?instructorId=0038Z00003UGyF9QAL">DLI Instructor</a>)</li>
+</ul>
+
+</details>-->
+       <!--<details open><summary>October 29, 2024</summary>
+
+<div><iframe width="850" height="476" src="https://www.youtube.com/embed/-C43j2HgQdY" style="margin-top: 1em;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+<p>Topics Covered:</p>
+
+<ul>
+    <li><a href="https://github.com/nasa-jpl/rosa" target="_blank">ROSA Connector for Isaac Sim</a> (Rob Royce, NASA JPL)</li>
+    <li><a href="https://oasisproject.net/" target="_blank">The OASIS Project: A Technical Brief</a> (Kris Kersey, Kersey Fabrications)</li>
+</ul>
+
+</details>-->
        <details>
         <summary>
          October 15, 2024
