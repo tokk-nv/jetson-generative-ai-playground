@@ -8,11 +8,11 @@
   <link href="tutorial-intro.html" rel="prev"/>
   <link href="initial_setup_jon_sdkm.html" rel="next"/>
   <link href="images/nvidia-favicon-rgb-16x16px@2x.png" rel="icon"/>
-  <meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
+  <meta content="mkdocs-1.6.1, mkdocs-material-9.5.50" name="generator"/>
   <title>
    🚀 Initial Setup Guide - Jetson Orin Nano - NVIDIA Jetson AI Lab
   </title>
-  <link href="assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
+  <link href="assets/stylesheets/main.a40c8224.min.css" rel="stylesheet"/>
   <link href="assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css?family=NVIDIA-NALA:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
@@ -339,9 +339,9 @@
                     </a>
                    </li>
                    <li class="md-nav__item">
-                    <a class="md-nav__link" href="#7-reboot-and-observe-firmware-update-to-3642">
+                    <a class="md-nav__link" href="#7-reboot-and-observe-firmware-update-to-3643">
                      <span class="md-ellipsis">
-                      7️⃣ Reboot and observe firmware update to 36.4.2
+                      7️⃣ Reboot and observe firmware update to 36.4.3
                      </span>
                     </a>
                    </li>
@@ -354,9 +354,9 @@
                     <nav aria-label="8️⃣ Unlock Super Performance" class="md-nav">
                      <ul class="md-nav__list">
                       <li class="md-nav__item">
-                       <a class="md-nav__link" href="#switch-to-maxn-mode">
+                       <a class="md-nav__link" href="#switch-to-maxn-super-mode">
                         <span class="md-ellipsis">
-                         Switch to MAXN mode
+                         Switch to MAXN SUPER mode
                         </span>
                        </a>
                       </li>
@@ -364,9 +364,9 @@
                     </nav>
                    </li>
                    <li class="md-nav__item">
-                    <a class="md-nav__link" href="#8-start-developing-on-jetpack-6x">
+                    <a class="md-nav__link" href="#start-developing-on-jetpack-62">
                      <span class="md-ellipsis">
-                      8️⃣ Start developing on JetPack 6.x
+                      👍 Start developing on JetPack 6.2
                      </span>
                     </a>
                    </li>
@@ -976,9 +976,9 @@
            </a>
           </li>
           <li class="md-nav__item">
-           <a class="md-nav__link" href="#7-reboot-and-observe-firmware-update-to-3642">
+           <a class="md-nav__link" href="#7-reboot-and-observe-firmware-update-to-3643">
             <span class="md-ellipsis">
-             7️⃣ Reboot and observe firmware update to 36.4.2
+             7️⃣ Reboot and observe firmware update to 36.4.3
             </span>
            </a>
           </li>
@@ -991,9 +991,9 @@
            <nav aria-label="8️⃣ Unlock Super Performance" class="md-nav">
             <ul class="md-nav__list">
              <li class="md-nav__item">
-              <a class="md-nav__link" href="#switch-to-maxn-mode">
+              <a class="md-nav__link" href="#switch-to-maxn-super-mode">
                <span class="md-ellipsis">
-                Switch to MAXN mode
+                Switch to MAXN SUPER mode
                </span>
               </a>
              </li>
@@ -1001,9 +1001,9 @@
            </nav>
           </li>
           <li class="md-nav__item">
-           <a class="md-nav__link" href="#8-start-developing-on-jetpack-6x">
+           <a class="md-nav__link" href="#start-developing-on-jetpack-62">
             <span class="md-ellipsis">
-             8️⃣ Start developing on JetPack 6.x
+             👍 Start developing on JetPack 6.2
             </span>
            </a>
           </li>
@@ -1060,14 +1060,14 @@
         is a perfect kit to start your journey of local generative AI evaluation and development.
        </p>
        <p>
-        With the December 2024 software update (
-        <strong>
-         JetPack 6.1 (rev.1)
-        </strong>
-        ), this advanced edge computer delivers up to 70% more performance, making it an even more powerful platform for the era of generative AI.
+        With the December 2024 software update (JetPack 6.1 (rev.1)), this advanced edge computer delivers up to 70% more performance, making it an even more powerful platform for the era of generative AI.
        </p>
        <p>
-        This guide explains the complete flow from opening the box, updating the firmware if needed, flashing the latest JetPack 6.1 (rev. 1) image on SD card, and the initial software setup, so that you will be ready for tutorials listed on this site and other AI projects.
+        This guide explains the complete flow from opening the box, updating the firmware if needed, flashing the latest
+        <strong>
+         JetPack 6.2
+        </strong>
+        image on SD card, and the initial software setup, so that you will be ready for tutorials listed on this site and other AI projects.
        </p>
        <h2 id="check-your-inventory">
         Check your inventory
@@ -1210,15 +1210,15 @@
         </p>
         <pre class="mermaid"><code>flowchart
     A(start) --&gt; B{1️⃣ Check if Jetson UEFI Firmware&lt;br&gt;is newer than version 36.0}
-    B --[YES] --&gt; O[6️⃣ Boot with JetPack 6.1 rev.1 microSD card&lt;br&gt; to schedule firmware update]
+    B --[YES] --&gt; O[6️⃣ Boot with JetPack 6.2 microSD card&lt;br&gt; to schedule firmware update]
     B --[No] --&gt; C[2️⃣ Boot with JetPack 5.1.3 microSD card&lt;br&gt;to schedule firmware update]
     C --&gt; D[3️⃣ Reboot] --&gt; E{{Firmware update to 5.0 during reboot}}
     E --&gt; F[4️⃣ Run QSPI updater] --&gt; G[5️⃣ Reboot] --&gt; H{{QSPI update during reboot - Firmware 36.4.0}}
     H --&gt; O
     O --&gt; P[7️⃣ Reboot]
-    P --&gt; Q{{Firmware update to 36.4.2 during reboot}}
+    P --&gt; Q{{Firmware update to 36.4.3 during reboot}}
     Q --&gt; R[8️⃣ Unlock super performance] 
-    R --&gt; S(👍 Start developing on JetPack 6.x) 
+    R --&gt; S(👍 Start developing on JetPack 6.2) 
 
 
     style C fill:#fee
@@ -1343,7 +1343,7 @@
               (Pin 3)
               <span class="twemoji">
                <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
+                <!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
                 <path d="m406.6 374.6 96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l41.4 41.4H109.2l41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288h293.5l-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z">
                 </path>
                </svg>
@@ -1360,7 +1360,7 @@
               (Pin 4)
               <span class="twemoji">
                <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
+                <!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
                 <path d="m406.6 374.6 96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l41.4 41.4H109.2l41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288h293.5l-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z">
                 </path>
                </svg>
@@ -1377,7 +1377,7 @@
               (Pin 7)
               <span class="twemoji">
                <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
+                <!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
                 <path d="m406.6 374.6 96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l41.4 41.4H109.2l41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288h293.5l-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z">
                 </path>
                </svg>
@@ -1495,7 +1495,7 @@
           "
           <span class="twemoji">
            <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-            <!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
+            <!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
             <path d="M18.4 445c11.2 5.3 24.5 3.6 34.1-4.4L224 297.7V416c0 12.4 7.2 23.7 18.4 29s24.5 3.6 34.1-4.4L448 297.7V416c0 17.7 14.3 32 32 32s32-14.3 32-32V96c0-17.7-14.3-32-32-32s-32 14.3-32 32v118.3L276.5 71.4c-9.5-7.9-22.8-9.7-34.1-4.4S224 83.6 224 96v118.3L52.5 71.4C43 63.5 29.7 61.7 18.4 67S0 83.6 0 96v320c0 12.4 7.2 23.7 18.4 29">
             </path>
            </svg>
@@ -1529,7 +1529,7 @@
          <label for="__tabbed_2_2">
           <span class="twemoji">
            <svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-            <!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
+            <!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.-->
             <path d="M18.4 445c11.2 5.3 24.5 3.6 34.1-4.4L224 297.7V416c0 12.4 7.2 23.7 18.4 29s24.5 3.6 34.1-4.4L448 297.7V416c0 17.7 14.3 32 32 32s32-14.3 32-32V96c0-17.7-14.3-32-32-32s-32 14.3-32 32v118.3L276.5 71.4c-9.5-7.9-22.8-9.7-34.1-4.4S224 83.6 224 96v118.3L52.5 71.4C43 63.5 29.7 61.7 18.4 67S0 83.6 0 96v320c0 12.4 7.2 23.7 18.4 29">
             </path>
            </svg>
@@ -1967,7 +1967,7 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
         6️⃣ Boot with JetPack 6.x SD card
        </h2>
        <p>
-        Once we know the onboard firmware is up-to-date and ready for JetPack 6.x, we can boot Jetson Orin Nano Developer Kit with a microSD card for JetPack 6.
+        Once we know the onboard firmware is up-to-date and ready for JetPack 6.x, we can boot Jetson Orin Nano Developer Kit with a microSD card for JetPack 6.2.
        </p>
        <ol>
         <li>
@@ -1982,10 +1982,10 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
           or from the below direct link button.
          </p>
          <p>
-          <a class="md-button md-button--primary" href="https://developer.nvidia.com/downloads/embedded/L4T/r36_Release_v4.0/jp61-rev1-orin-nano-sd-card-image.zip">
+          <a class="md-button md-button--primary" href="https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.3/jp62-orin-nano-sd-card-image.zip">
            Jetson Orin Nano Developer Kit
            <br/>
-           JetPack 6.1 (rev. 1) image
+           JetPack 6.2
           </a>
          </p>
         </li>
@@ -2011,7 +2011,7 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
          <p>
           Insert the
           <strong>
-           JetPack 6.x
+           JetPack 6.2
           </strong>
           microSD card into the slot on Jetson module
          </p>
@@ -2038,7 +2038,7 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
           Ensure firmware update is scheduled.
          </p>
          <p>
-          JetPack 6.1 (rev 1) SD card will automatically schedule another firmware/bootloader update in the next (3rd and final) reboot cycle.
+          JetPack 6.2 SD card will automatically schedule another firmware/bootloader update in the next (3rd and final) reboot cycle.
          </p>
          <div class="tabbed-set tabbed-alternate" data-tabs="6:2">
           <input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio"/>
@@ -2085,45 +2085,13 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
          </div>
         </li>
        </ol>
-       <h2 id="7-reboot-and-observe-firmware-update-to-3642">
+       <h2 id="7-reboot-and-observe-firmware-update-to-3643">
         7️⃣ Reboot and observe firmware update to
         <code>
-         36.4.2
+         36.4.3
         </code>
        </h2>
        <ol>
-        <li>
-         <p>
-          Delete old power profile
-         </p>
-         <div class="admonition warning">
-          <p class="admonition-title">
-           Attention
-          </p>
-          <p>
-           If your Jetson Orin Developer Kit was previously running
-           <strong>
-            JetPack 6.0
-           </strong>
-           or
-           <strong>
-            JetPack 6.1
-           </strong>
-           , execute the following command after the final login and reboot your device. This ensures that the
-           <strong>
-            MAXN
-           </strong>
-           performance mode becomes available on your system.
-          </p>
-         </div>
-         <p>
-          We need to delete the old power config in preparation for Super config introduction.
-         </p>
-         <div class="highlight">
-          <pre><span></span><code>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/etc/nvpmodel.conf
-</code></pre>
-         </div>
-        </li>
         <li>
          <p>
           Reboot your Jetson Orin Nano Developer Kit on JetPack 6.1 (rev.1) SD card to trigger the final firmware update (to
@@ -2238,15 +2206,16 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
          Attention
         </p>
         <p>
-         If your Jetson Orin Developer Kit was previously running
+         If your are booting with
          <strong>
-          JetPack 6.0
+          <em>
+           JetPack 6.1 (rev.1)
+          </em>
          </strong>
-         or
-         <strong>
-          JetPack 6.1
-         </strong>
-         , execute the following command after the final login and reboot your device. This ensures that the
+         SD card instead of JetPack 6.2 SD card, you may need to execute the following command after the final login and reboot your device.
+        </p>
+        <p>
+         This ensures that the
          <strong>
           MAXN
          </strong>
@@ -2257,23 +2226,27 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
 </code></pre>
         </div>
        </div>
-       <h3 id="switch-to-maxn-mode">
-        Switch to MAXN mode
+       <h3 id="switch-to-maxn-super-mode">
+        Switch to MAXN SUPER mode
        </h3>
        <p>
-        Note that the default power mode is
+        Note that the default power mode on JetPack 6.2 on Jetson Orin Nano Developer Kit is
         <strong>
-         15W
+         25W
         </strong>
         .
         <br/>
-        To switch to the new power mode and unlock the increased performance, follow below steps:
+        To switch to the
+        <strong>
+         MAXN SUPER
+        </strong>
+        mode and unlock the unregulated performance, follow below steps:
        </p>
        <ol>
         <li>
          Click on the current power mode (
          <strong>
-          15W
+          25W
          </strong>
          ) by clicking the NVIDIA icon on the right side of the Ubuntu desktop’s top bar.
         </li>
@@ -2287,16 +2260,16 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
         <li>
          Choose
          <strong>
-          MAXN
+          MAXN SUPER
          </strong>
          to enable maximum performance.
         </li>
        </ol>
        <p>
-        <img alt="alt text" src="images/jons_power-mode-to-maxn.png"/>
+        <img alt="alt text" src="images/jons_power-mode-to-maxn-super.png"/>
        </p>
-       <h2 id="8-start-developing-on-jetpack-6x">
-        8️⃣ Start developing on JetPack 6.x
+       <h2 id="start-developing-on-jetpack-62">
+        👍 Start developing on JetPack 6.2
        </h2>
        <p>
         🎊
@@ -2304,7 +2277,7 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
          Congratulations!
         </strong>
         <br/>
-        Your Jetson Orin Nano Developer Kit is set up with JetPack 6.x SD card and you are ready to develop on JetPack 6.x.
+        Your Jetson Orin Nano Developer Kit is set up with JetPack 6.2 and you are ready to develop on JetPack 6.2.
        </p>
        <h2 id="next-step">
         Next step
@@ -2397,7 +2370,7 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
    </div>
   </div>
   <script id="__config" type="application/json">
-   {"base": ".", "features": ["navigation.indexes", "navigation.expand", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "content.tabs.link", "content.code.copy", "announce.dismiss"], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}
+   {"base": ".", "features": ["navigation.indexes", "navigation.expand", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "content.tabs.link", "content.code.copy", "announce.dismiss"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}
   </script>
   <!-- OneTrust Cookies Consent Notice start for www.jetson-ai-lab.com -->
   <script charset="UTF-8" data-domain-script="018e2d65-efdf-7071-b793-f15ccf25c234" src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" type="text/javascript">
@@ -2413,7 +2386,7 @@ Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">11439</s
   </script>
   <script src="//assets.adobedtm.com/5d4962a43b79/814eb6e9b4e1/launch-4bc07f1e0b0b.min.js">
   </script>
-  <script src="assets/javascripts/bundle.88dd0f4e.min.js">
+  <script src="assets/javascripts/bundle.60a45f97.min.js">
   </script>
   <script>
    window._6si = window._6si || [];
