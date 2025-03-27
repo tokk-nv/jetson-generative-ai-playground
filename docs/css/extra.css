@@ -163,3 +163,10 @@
 .shadow {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+.md-typeset input[type="checkbox"]:not(:checked):disabled + .task-list-indicator::before {
+    background-color: #999;
+    -webkit-mask-image: var(--md-tasklist-icon);            /* ensure the unchecked mask shows */
+    mask-image: var(--md-tasklist-icon);
+    opacity: 0.5; /* optional: visually indicate it's inactive */
+  }
