@@ -29,7 +29,7 @@ Let's run HuggingFace [`LeRobot`](https://github.com/huggingface/lerobot/) to tr
 		bash jetson-containers/install.sh
 		```
 
-## Work with Real-World Robots - Before starting containers
+## Preparation before starting `lerobot` container
 
 This section gives the guide on how you can work through the LeRobot official example of [Getting Started with Real-World Robots \(`7_get_started_with_real_robot.md
 `\)](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md) on your Jetson.
@@ -199,7 +199,7 @@ This feature require some packages to be installed.
 sudo apt update && sudo apt install v4l2loopback-dkms v4l-utils
 ```
 
-### f. Increse the swap file size
+### f. Increase the swap file size
 
 You may ran out of memory when are setting up to perform ACT model training.
 
@@ -220,9 +220,7 @@ sudo reboot
 
     ```bash
     cd jetson-containers
-    ./run.sh \
-      -v ${PWD}/data/lerobot/:/opt/lerobot/ \
-      $(./autotag lerobot)
+    jetson-containers run -v ${PWD}/data/lerobot/:/opt/lerobot/ $(autotag lerobot)
     ```
 
 === "CSI cameras"
@@ -235,21 +233,7 @@ sudo reboot
       $(./autotag lerobot)
     ```
 
-## Work with Real-World Robots - Once in container
-
-!!! tip "JupyerLab tip"
-
-    Inside the `lerobot` container, JupyterLab server process starts.
-
-    You can access with `http://localhost:8888/` (or `http://<IP_ADDRESS>:8888/` from other PC on the same network).
-
-    In the `notebooks`, there are some Jupyter notebooks for each segment of the official tutorial [Getting Started with Real-World Robots \(`7_get_started_with_real_robot.md`\)](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md).
-
-    ![](./images/lerobot_jupyter_notebooks.png)
-
-    Please note that some of them (like `notebooks/7-2_real-robot_configure-motors.ipynb`) can be used as a real work notebook to execute python codes and scritps convniently inside the notebook along with instructions (rather than switching to console).
-
-    However, keep in mind that you are encouraged to always check the [original official tutorial](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md), and some operation like training is much better executed on console.
+## Workflow in `lerobot` container
 
 !!! tip "Bash history tip"
 
@@ -270,27 +254,92 @@ pactl list short sinks
 pactl set-default-sink [SINK_NAME_OR_INDEX]
 ```
 
-### 1. Order and Assemble your Koch v1.1
+### 1. Order and Assemble
 
-You can order the Koch v1.1 kits from ROBOTIS. (*Note: they don't come with 3d printed parts*)
+=== "SO-100 arm"
 
-- [Follower arm](https://www.robotis.us/koch-v1-1-low-cost-robot-arm-follower/)
-- [Leader arm](https://www.robotis.us/koch-v1-1-low-cost-robot-arm-follower/)
+    You can order the SO-100 arm kits from Seeed Studio.
 
-TODO:
+    - Servo motor kit
+        - [SO-ARM100 Low-Cost AI Arm Servo Motor Kit for LeRobot](https://www.seeedstudio.com/SO-ARM100-Low-Cost-AI-Arm-Kit.html)
+        - [SO-ARM100 Low-Cost AI Arm Servo Motor Kit Pro for LeRobot](https://www.seeedstudio.com/SO-ARM100-Low-Cost-AI-Arm-Kit-Pro-p-6343.html)
+    - 3D printed parts
+        - [SO-ARM100 Low-Cost AI Arm 3D Printed Skeleton](https://www.seeedstudio.com/SO-ARM100-3D-printed-Enclosure-p-6409.html)
 
-- [ ] Document Jetson unique hardware setup
-- [ ] Share custom 3D print models
+    Check the official [Assembly tutorial](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#d-step-by-step-assembly-instructions).
+
+=== "Koch arm"
+
+    You can order the Koch v1.1 kits from ROBOTIS. (*Note: they don't come with 3d printed parts*)
+
+    - [Follower arm](https://www.robotis.us/koch-v1-1-low-cost-robot-arm-follower/)
+    - [Leader arm](https://www.robotis.us/koch-v1-1-low-cost-robot-arm-follower/)
 
 ### 2. Configure motors, calibrate arms, teleoperate your Koch v1.1
 
-Follow the Jupyter notebook `7-2_real-robot_configure-motors.ipynb`.
+=== "SO-100 arm"
+
+    Follow the official tutorials.
+
+    - [Configure the motors](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#c-configure-the-motors)
+    - [Calibrate](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#e-calibrate)
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/FioA2oeFZ5I?si=98gzLQiJ0VY_nGH0&amp;start=724" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+    - [Teleoperate](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#e-calibrate)
+
+=== "Koch arm"
+
+    Follow the [official tutorial](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md#2-configure-motors-calibrate-arms-teleoperate-your-koch-v11).
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/8drnU9uRY24?si=JCsDMSwOJ11MpgyL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+    > Optionally, you can refer and use the Jupyter notebook `7-2_real-robot_configure-motors.ipynb`.
 
 ### 3. Record your Dataset and Visualize it
 
-You should mostly operate on the container's terminal.
+=== "SO-100 arm"
 
-Follow the [official document's section](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md#3-record-your-dataset-and-visualize-it).
+    You should mostly operate on the container's terminal.
+
+    Follow the official tutorial to
+
+    - [record a dataset](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#g-record-a-dataset), and
+    - [visualize a dataset](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#h-visualize-a-dataset).
+
+=== "Koch arm"
+
+    You should mostly operate on the container's terminal.
+
+    Follow the [official document's section](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md#3-record-your-dataset-and-visualize-it).
+
+!!! tip
+
+    Following template command to **record a dataset** is registered in Bash history inside the `lerobot` container.
+
+    > TODO:
+    >
+    > - [x] Update the following command
+    >     - [ ] Update the bash history in `jetson-container`
+    > - [ ] Use a env variable for `HF_USER`
+
+    ```bash
+    wandb login
+    export HF_USER=
+    export ROBOT_TYPE=so100 #or, koch
+    python lerobot/scripts/control_robot.py \
+        --robot.type=${ROBOT_TYPE} \
+        --control.type=record \
+        --control.single_task="Grasp a lego block and put it in the bin." \
+        --control.fps 30 \
+        --control.repo_id ${HF_USER}/test_$(date +%Y%m%d_%H%M%S) \
+        --control.tags '["tutorial"]' \
+        --control.warmup-time-s 5 \
+        --control.episode-time-s 30 \
+        --control.reset-time-s 30 \
+        --control.num-episodes 10 \
+        --control.push_to_hub=true
+    ```
 
 !!! tip "Camera config tip"
 
@@ -300,59 +349,52 @@ Follow the [official document's section](https://github.com/huggingface/lerobot/
 
     Another thing worth experimenting is the **wrist cam**. More to come later.
 
-!!! tip
-
-    Following commands are registered in Bash history inside the `lerobot` container.
-
-    ```bash
-    wandb login
-    export HF_USER=
-    python lerobot/scripts/control_robot.py record \
-      --robot-path lerobot/configs/robot/koch.yaml \
-      --fps 30 \
-      --root data \
-      --repo-id ${HF_USER}/koch_test_$(date +%Y%m%d_%H%M%S) \
-      --tags tutorial \
-      --warmup-time-s 5 \
-      --episode-time-s 30 \
-      --reset-time-s 30 \
-      --num-episodes 10
-    ```
 
 !!! tip
 
-    If you plan to perfom training on a different machine, `scp` the dataset directory.
+    If you plan to perform training on a different machine, `scp` the dataset directory.
 
     === "To another Jetson"
 
         ```bash
-        scp -r data/lerobot/data/${HF_USER}/koch_test_01/ <USER>@<IP>:/ssd/jetson-containers/data/lerobot/data/${HF_USER}/
+        scp -r data/lerobot/data/${HF_USER}/test_01/ <USER>@<IP>:/ssd/jetson-containers/data/lerobot/data/${HF_USER}/
         ```
 
     === "To other PC"
 
         ```bash
-        scp -r data/lerobot/data/${HF_USER}/koch_test_01/ <USER>@<IP>:/home/<USER>/lerobot/data/${HF_USER}/
+        scp -r data/lerobot/data/${HF_USER}/test_01/ <USER>@<IP>:/home/<USER>/lerobot/data/${HF_USER}/
         ```
 
 ### 4. Train a policy on your data
 
-You should operate on ther container's terminal.
+You should operate on other container's terminal.
 
-Follow the [official document's section](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md#4-train-a-policy-on-your-data).
+=== "SO-100 arm"
+
+    You should mostly operate on the container's terminal.
+
+    Follow the official tutorial to
+
+    - [record a dataset](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#g-record-a-dataset), and
+    - [visualize a dataset](https://github.com/huggingface/lerobot/blob/main/examples/10_use_so100.md#h-visualize-a-dataset).
+
+=== "Koch arm"
+
+    Follow the [official document's section](https://github.com/huggingface/lerobot/blob/main/examples/7_get_started_with_real_robot.md#4-train-a-policy-on-your-data).
+
 
 !!! tip
 
     ```bash
     wandb login
     DATA_DIR=data python lerobot/scripts/train.py \
-        dataset_repo_id=${HF_USER}/koch_test \
-        policy=act_koch_real \
-        env=koch_real \
-        hydra.run.dir=outputs/train/act_koch_test \
-        hydra.job.name=act_koch_test \
-        device=cuda \
-        wandb.enable=true
+        --dataset_repo_id=${HF_USER}/koch_test \
+        --policy.type=act \
+        --output_dir=outputs/train/act_koch_test \
+        --job_name=act_koch_test \
+        --device=cuda \
+        --wandb.enable=true
     ```
 
 !!! tip
