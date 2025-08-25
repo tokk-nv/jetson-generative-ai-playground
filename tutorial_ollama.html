@@ -378,9 +378,9 @@
                     </nav>
                    </li>
                    <li class="md-nav__item">
-                    <a class="md-nav__link" href="#2-docker-container-for-ollama-using-jetson-containers">
+                    <a class="md-nav__link" href="#2-docker-container-for-ollama">
                      <span class="md-ellipsis">
-                      (2) Docker container for ollama using jetson-containers
+                      (2) Docker container for ollama
                      </span>
                     </a>
                    </li>
@@ -872,9 +872,9 @@
            </nav>
           </li>
           <li class="md-nav__item">
-           <a class="md-nav__link" href="#2-docker-container-for-ollama-using-jetson-containers">
+           <a class="md-nav__link" href="#2-docker-container-for-ollama">
             <span class="md-ellipsis">
-             (2) Docker container for ollama using jetson-containers
+             (2) Docker container for ollama
             </span>
            </a>
           </li>
@@ -933,15 +933,7 @@
          for supporting web clients.
         </li>
         <li>
-         Supports the latest models like
-         <a href="https://ollama.com/library/llama3" target="_blank">
-          Llama-3
-         </a>
-         and
-         <a href="https://ollama.com/library/phi3" target="_blank">
-          Phi-3 Mini
-         </a>
-         !
+         Supports the latest models like [gpt-oss](https://ollama.com/library/gpt-oss{:target="_blank"}!
         </li>
        </ul>
        <h2 id="ollama-server">
@@ -957,6 +949,9 @@
            One of the following Jetson devices:
           </p>
           <p>
+           <span class="blobDarkGreen3">
+            Jetson AGX Thor
+           </span>
            <span class="blobDarkGreen4">
             Jetson AGX Orin (64GB)
            </span>
@@ -1023,11 +1018,26 @@
        <h2 id="1-native-install">
         (1) Native Install
        </h2>
+       <div class="admonition note">
+        <p class="admonition-title">
+         Note
+        </p>
+        <p>
+         Ollama native installer does not support Jetson AGX Thor Developer Kit yet.
+        </p>
+        <p>
+         If you want to run Ollama on Jetson AGX Thor Developer Kit, checkout the following
+         <a href="#2-docker-container-for-ollama">
+          Ollama container
+         </a>
+         approach.
+        </p>
+       </div>
        <p>
         Ollama's official installer already support Jetson and can easily install CUDA-supporting Ollama.
        </p>
        <div class="highlight">
-        <pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh<span class="w"> </span>
+        <pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 </code></pre>
        </div>
        <p>
@@ -1061,77 +1071,197 @@
         <pre><span></span><code>ollama<span class="w"> </span>run<span class="w"> </span>llama3.2:3b
 </code></pre>
        </div>
-       <h2 id="2-docker-container-for-ollama-using-jetson-containers">
+       <h2 id="2-docker-container-for-ollama">
         (2) Docker container for
         <code>
          ollama
         </code>
-        using
-        <code>
-         jetson-containers
-        </code>
        </h2>
-       <div class="highlight">
-        <pre><span></span><code># models cached under jetson-containers/data
+       <div class="tabbed-set tabbed-alternate" data-tabs="1:2">
+        <input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"/>
+        <input id="__tabbed_1_2" name="__tabbed_1" type="radio"/>
+        <div class="tabbed-labels">
+         <label for="__tabbed_1_1">
+          <span class="twemoji">
+           <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-8 14 4-8V7H9v2h4l-4 8z">
+            </path>
+           </svg>
+          </span>
+          JetPack 7 (Jetson Thor)
+         </label>
+         <label for="__tabbed_1_2">
+          <span class="twemoji">
+           <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 13h2v2h-2m0 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2V9h4V7h-4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2m8 2H5V5h14m0-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2">
+            </path>
+           </svg>
+          </span>
+          JetPack 6 (Jetson Orin)
+         </label>
+        </div>
+        <div class="tabbed-content">
+         <div class="tabbed-block">
+          <p>
+           You can use this Docker container built to run Ollama on Jetson Thor.
+          </p>
+          <div class="highlight">
+           <pre><span></span><code>mkdir<span class="w"> </span>~/ollama-data/
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>-v<span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/ollama-data:/data<span class="w"> </span>ghcr.io/nvidia-ai-iot/ollama:r38.2.arm64-sbsa-cu130-24.04
+</code></pre>
+          </div>
+          <p>
+           It will take some time to pull (download) the container image.
+          </p>
+          <p>
+           Once in the container, you will see something like this.
+          </p>
+          <div class="highlight">
+           <pre><span></span><code>Starting<span class="w"> </span>ollama<span class="w"> </span>server
+
+
+OLLAMA_HOST<span class="w">   </span><span class="m">0</span>.0.0.0
+OLLAMA_LOGS<span class="w">   </span>/data/logs/ollama.log
+OLLAMA_MODELS<span class="w"> </span>/data/models/ollama/models
+
+
+ollama<span class="w"> </span>server<span class="w"> </span>is<span class="w"> </span>now<span class="w"> </span>started,<span class="w"> </span>and<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>run<span class="w"> </span>commands<span class="w"> </span>here<span class="w"> </span>like<span class="w"> </span><span class="s1">'ollama run gemma3'</span>
+
+root@2a79cc8835d9:/#
+</code></pre>
+          </div>
+          <p>
+           Try running a GPT OSS (20b parameter) model by issuing a command below.
+          </p>
+          <div class="highlight">
+           <pre><span></span><code>ollama<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>gpt-oss:20b
+</code></pre>
+          </div>
+          <p>
+           It will download 14GB weight, so it takes some time here as well.
+          </p>
+          <p>
+           Once ready, it will show something like this:
+          </p>
+          <div class="highlight">
+           <pre><span></span><code>root@2a79cc8835d9:/#<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>gpt-oss:20b
+pulling<span class="w"> </span>manifest
+pulling<span class="w"> </span>b112e727c6f1:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span>▕███████████████████████████████████████████▏<span class="w">  </span><span class="m">13</span><span class="w"> </span>GB
+pulling<span class="w"> </span>fa6710a93d78:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span>▕███████████████████████████████████████████▏<span class="w"> </span><span class="m">7</span>.2<span class="w"> </span>KB
+pulling<span class="w"> </span>f60356777647:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span>▕███████████████████████████████████████████▏<span class="w">  </span><span class="m">11</span><span class="w"> </span>KB
+pulling<span class="w"> </span>d8ba2f9a17b3:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span>▕███████████████████████████████████████████▏<span class="w">   </span><span class="m">18</span><span class="w"> </span>B
+pulling<span class="w"> </span>55c108d8e936:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span>▕███████████████████████████████████████████▏<span class="w">  </span><span class="m">489</span><span class="w"> </span>B
+verifying<span class="w"> </span>sha256<span class="w"> </span>digest
+writing<span class="w"> </span>manifest
+success
+&gt;&gt;&gt;<span class="w"> </span>Send<span class="w"> </span>a<span class="w"> </span>message<span class="w"> </span><span class="o">(</span>/?<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">help</span><span class="o">)</span>
+</code></pre>
+          </div>
+          <p>
+           Try any prompt and you will get something like this.
+          </p>
+          <div class="highlight">
+           <pre><span></span><code>root@c11344f6bbbc:/#<span class="w"> </span>ollama<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>gpt-oss:20b
+&gt;&gt;&gt;<span class="w"> </span>why<span class="w"> </span>is<span class="w"> </span>the<span class="w"> </span>sky<span class="w"> </span>blue<span class="w"> </span><span class="k">in</span><span class="w"> </span>one<span class="w"> </span>sentence
+Thinking...
+We<span class="w"> </span>need<span class="w"> </span>to<span class="w"> </span>answer:<span class="w"> </span><span class="s2">"why is the sky blue in one sentence"</span>.<span class="w"> </span>Just<span class="w"> </span>one<span class="w"> </span>sentence.<span class="w"> </span>Provide<span class="w"> </span>explanation:<span class="w"> </span>Rayleigh<span class="w"> </span>scattering<span class="w"> </span>of<span class="w"> </span>sunlight,
+shorter<span class="w"> </span>wavelengths<span class="w"> </span>scatter<span class="w"> </span>more.<span class="w"> </span>We<span class="s1">'ll produce a single sentence. Let'</span>s<span class="w"> </span>give<span class="w"> </span>a<span class="w"> </span>concise<span class="w"> </span>explanation.
+...done<span class="w"> </span>thinking.
+
+The<span class="w"> </span>sky<span class="w"> </span>looks<span class="w"> </span>blue<span class="w"> </span>because<span class="w"> </span>the<span class="w"> </span>Earth<span class="err">'</span>s<span class="w"> </span>atmosphere<span class="w"> </span>scatters<span class="w"> </span>shorter-wavelength<span class="w"> </span><span class="o">(</span>blue<span class="o">)</span><span class="w"> </span>light<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>sun<span class="w"> </span>more<span class="w"> </span>efficiently<span class="w"> </span>than<span class="w"> </span>longer
+wavelengths,<span class="w"> </span>a<span class="w"> </span>phenomenon<span class="w"> </span>called<span class="w"> </span>Rayleigh<span class="w"> </span>scattering.
+
+total<span class="w"> </span>duration:<span class="w">       </span><span class="m">3</span>.504445244s
+load<span class="w"> </span>duration:<span class="w">        </span><span class="m">225</span>.399151ms
+prompt<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>count:<span class="w">    </span><span class="m">76</span><span class="w"> </span>token<span class="o">(</span>s<span class="o">)</span>
+prompt<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>duration:<span class="w"> </span><span class="m">673</span>.487645ms
+prompt<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>rate:<span class="w">     </span><span class="m">112</span>.85<span class="w"> </span>tokens/s
+<span class="nb">eval</span><span class="w"> </span>count:<span class="w">           </span><span class="m">88</span><span class="w"> </span>token<span class="o">(</span>s<span class="o">)</span>
+<span class="nb">eval</span><span class="w"> </span>duration:<span class="w">        </span><span class="m">2</span>.603822053s
+<span class="nb">eval</span><span class="w"> </span>rate:<span class="w">            </span><span class="m">33</span>.80<span class="w"> </span>tokens/s
+&gt;&gt;&gt;<span class="w"> </span>Send<span class="w"> </span>a<span class="w"> </span>message<span class="w"> </span><span class="o">(</span>/?<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">help</span><span class="o">)</span>
+</code></pre>
+          </div>
+          <p>
+           You can finish the session by typing
+           <code>
+            /bye
+           </code>
+           .
+          </p>
+         </div>
+         <div class="tabbed-block">
+          <p>
+           We can use
+           <code>
+            jetson-containers
+           </code>
+           to run Ollama.
+          </p>
+          <div class="highlight">
+           <pre><span></span><code># models cached under jetson-containers/data
 jetson-containers run --name ollama $(autotag ollama)
 
 # models cached under your user's home directory
 docker run --runtime nvidia --rm --network=host -v ~/ollama:/ollama -e OLLAMA_MODELS=/ollama dustynv/ollama:r36.2.0
 </code></pre>
-       </div>
-       <p>
-        Running either of these will start the local Ollama server as a daemon in the background.  It will save the models it downloads under your mounted
-        <code>
-         jetson-containers/data/models/ollama
-        </code>
-        directory (or another directory that you override with
-        <code>
-         OLLAMA_MODELS
-        </code>
-        )
-       </p>
-       <p>
-        Start the Ollama command-line chat client with your desired
-        <a href="https://ollama.com/library" target="_blank">
-         model
-        </a>
-        (for example:
-        <code>
-         llama3
-        </code>
-        ,
-        <code>
-         phi3
-        </code>
-        ,
-        <code>
-         mistral
-        </code>
-        )
-       </p>
-       <div class="highlight">
-        <pre><span></span><code># if running inside the same container as launched above
+          </div>
+          <p>
+           Running either of these will start the local Ollama server as a daemon in the background.  It will save the models it downloads under your mounted
+           <code>
+            jetson-containers/data/models/ollama
+           </code>
+           directory (or another directory that you override with
+           <code>
+            OLLAMA_MODELS
+           </code>
+           )
+          </p>
+          <p>
+           Start the Ollama command-line chat client with your desired
+           <a href="https://ollama.com/library" target="_blank">
+            model
+           </a>
+           (for example:
+           <code>
+            llama3
+           </code>
+           ,
+           <code>
+            phi3
+           </code>
+           ,
+           <code>
+            mistral
+           </code>
+           )
+          </p>
+          <div class="highlight">
+           <pre><span></span><code># if running inside the same container as launched above
 /bin/ollama run phi3
 
 # if launching a new container for the client in another terminal
 jetson-containers run $(autotag ollama) /bin/ollama run phi3
 </code></pre>
-       </div>
-       <p>
-        Or you can install Ollama's
-        <a href="https://github.com/ollama/ollama/releases" target="_blank">
-         binaries
-        </a>
-        for arm64 outside of container (without CUDA, which only the server needs)
-       </p>
-       <div class="highlight">
-        <pre><span></span><code># download the latest ollama release for arm64 into /bin
+          </div>
+          <p>
+           Or you can install Ollama's
+           <a href="https://github.com/ollama/ollama/releases" target="_blank">
+            binaries
+           </a>
+           for arm64 outside of container (without CUDA, which only the server needs)
+          </p>
+          <div class="highlight">
+           <pre><span></span><code># download the latest ollama release for arm64 into /bin
 sudo wget https://github.com/ollama/ollama/releases/download/$(git ls-remote --refs --sort="version:refname" --tags https://github.com/ollama/ollama | cut -d/ -f3- | sed 's/-rc.*//g' | tail -n1)/ollama-linux-arm64 -O /bin/ollama
 sudo chmod +x /bin/ollama
 
 # use the client like normal outside container
 /bin/ollama run phi3
 </code></pre>
+          </div>
+         </div>
+        </div>
        </div>
        <h2 id="open-webui">
         Open WebUI
