@@ -5,7 +5,7 @@ hide:
 
 # Benchmarks
 
-Below are AI inferencing benchmarks for [Jetson AGX Thor Developer Kit](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-thor/), [Jetson Orin Nano Super](https://developer.nvidia.com/blog/nvidia-jetson-orin-nano-developer-kit-gets-a-super-boost/?ncid=so-othe-293081-vt48) and [Jetson AGX Orin](#jetson-agx-orin).
+Below are AI inference benchmarks for [Jetson AGX Thor Developer Kit](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-thor/), [Jetson Orin Nano Super](https://developer.nvidia.com/blog/nvidia-jetson-orin-nano-developer-kit-gets-a-super-boost/?ncid=so-othe-293081-vt48) and [Jetson AGX Orin](#jetson-agx-orin).
 
 
 #### Jetson AGX Thor Developer Kit
