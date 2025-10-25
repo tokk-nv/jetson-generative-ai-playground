@@ -1,0 +1,15 @@
+image: python:latest
+
+pages:
+  stage: deploy
+  only:
+    - gitlab-lightweight
+  script:
+    - pip install mkdocs-material
+    - pip install mkdocs-redirects
+    - mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
+  tags:
+    - pages
