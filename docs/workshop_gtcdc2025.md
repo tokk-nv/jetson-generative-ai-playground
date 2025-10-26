@@ -1,7 +1,10 @@
-# On-Device Generative AI on Jetson Thor
-*Quality-first optimization with vLLM, FP8/FP4 quantization & speculative decoding*
+# From AI Exploration to Production Deployment
 
-> Welcome! In this hands-on, you’ll unlock truly high-performance, **on-device** generative AI using the new **NVIDIA Jetson Thor**. You’ll start with a clean quality baseline, then step through practical optimizations—**FP8**, **FP4**, and **speculative decoding**—measuring speed vs. quality at each stage.
+![](./images/jetson-agx-thor-family-key-visual-03-v002-eb-1k.jpg){ width="40%"  align=right}
+
+*Master inference optimization on Jetson Thor with vLLM*
+
+> Welcome! In this hands-on workshop, you’ll unlock truly high-performance, **on-device** generative AI using the new [**NVIDIA Jetson Thor**](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-thor/). You’ll start with a clean quality baseline, then step through practical optimizations -- **FP8**, **FP4**, and **speculative decoding** -- measuring speed vs. quality at each stage.
 
 ## What you’ll build
 
@@ -11,7 +14,29 @@
 - A repeatable procedure to compare FP16 → FP8 → FP4 → FP4+SpecDec
 
 !!! tip "Who is this for?"
-    Teams building edge apps (robots, kiosks, appliances) who need **fast, private, API-compatible** LLMs without cloud dependency.
+    Teams building edge applications/products (robots, kiosks, appliances) who need **fast, private, API-compatible** LLMs without cloud dependency.
+
+!!! info "🌸 GTC DC 2025 Workshop Setup"
+    **Welcome to the GTC DC 2025 "Accelerate Generative AI Inference on Jetson Thor" Workshop!**
+
+    ### What We Provide:
+    - **Hardware**: Jetson Thor rack setup with mini LCD display
+    - **Network**: Local workshop network (see topology diagram below)
+    - **Pre-installed**: BSP preinstalled and set up, VLLM container pulled and ready
+    - **Support**: Technical Assistants (TAs) available throughout the session
+    - **Jetson HUD**: Utility for LCD display monitoring
+
+    ### Network Topology:
+    [Add your network diagram here]
+
+    ### Jetson HUD:
+    [Add your image here]
+
+    ### Need Help?
+    **Use the "Red-Cup, Blue-Cup" system:**
+
+    - 🔴 **Red cup on top**: I need help from a TA
+    - 🔵 **Blue cup on top**: I'm good to go (problem resolved)
 
 ---
 
@@ -27,53 +52,485 @@
 
 ---
 
-## Quick Start (Demo: large open-weight model)
+## 🚀 Experience: Thor's Raw Power with 120B Intelligence
 
-> This section shows the “it works!” moment—serving a large open-weight model locally and wiring Open WebUI. Replace the model with what your lab standardizes on.
+### The Open Weights Revolution 🔓
 
-### 1) (Optional) Install tokenizer encodings (for some backends/tools)
+**What are Open Weights Models?**<br>
+Unlike **closed models** (GPT-4, Claude, Gemini), **open weights models** give you:
+
+- **Complete model access**: Download and run locally
+- **Data privacy**: Your data never leaves your device
+- **No API dependencies**: Work offline, no rate limits
+- **Customization freedom**: Fine-tune for your specific needs
+- **Cost control**: No per-token charges
+
+### Why This Matters: Closed vs. Open Comparison
+
+| Aspect | Closed Models (GPT-4, etc.) | Open Weights Models |
+|--------|------------------------------|---------------------|
+| **Privacy** | Data sent to external servers | Stays on your device |
+| **Latency** | Network dependent | Local inference speed |
+| **Availability** | Internet required | Works offline |
+| **Customization** | Limited via prompts | Full fine-tuning possible |
+| **Cost** | Pay per token/request | Hardware cost only |
+| **Compliance** | External data handling | Full control |
+
+### Enter GPT-OSS-120B: Game Changer 🎯
+
+**OpenAI's GPT-OSS-120B** represents a breakthrough:
+
+- **First major open weights model** from OpenAI
+- **120 billion parameters** of GPT-quality intelligence
+- **Massive compute requirements** - needs serious hardware
+
+**The Thor Advantage:**
+
+- **One of the few platforms** capable of running GPT-OSS-120B at the edge
+- **Real-time inference** without cloud dependencies
+- **Perfect for evaluation**: Test if the model fits your domain
+- **Baseline assessment**: Understand capabilities before fine-tuning
+
+### Why Start Here?
+
+Before you invest in fine-tuning or domain adaptation:
+
+1. **Domain Knowledge Check**: Does the base model understand your field?
+2. **Performance Baseline**: How well does it perform out-of-the-box?
+3. **Use Case Validation**: Is this the right model architecture?
+4. **Resource Planning**: What hardware do you actually need?
+
+**Thor lets you answer these questions locally, privately, and immediately.**
+
+
+### Jetson set-up
+
+??? note "Jetson set up (GTC DC workshop attendees get to skip)"
+
+    You want to do
+
+    - BSP installation
+      - https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html
+    - Docker setup https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/setup_docker.html
+
+??? note "Pre-Workshop Setup (For Organizers)"
+
+    !!! info "Directory Structure Alignment"
+        **Following jetson-containers convention with optimization caching:**
+
+        We use `$ROOT/data/` as the unified data directory structure:
+        ```
+        $ROOT/data/
+        ├── models/
+        │   └── huggingface/          # Model cache (122GB)
+        └── vllm_cache/               # Torch compile cache (~2GB)
+            └── torch_compile_cache/
+        ```
+
+        This ensures:
+
+        - ✅ **Consistency** with existing Jetson workflows
+        - ✅ **Familiar paths** for jetson-containers users
+        - ✅ **Easy integration** with other Jetson AI tools
+        - ✅ **Standardized model storage** across projects
+        - ✅ **Pre-warmed optimization** for instant startup
+
+    !!! warning "Storage Requirements"
+        **Total storage needed per Thor unit:**
+        - **GPT-OSS-120B model**: ~122GB
+        - **vLLM compilation cache**: ~2GB
+        - **Container images**: ~10GB
+        - **Workspace**: ~5GB
+
+        **Recommended per unit**: 200GB+ free space for comfortable operation
+
+    **Model Pre-download Process:**
+    ```bash
+    # 1. Download model once (takes 30-60 minutes depending on network)
+    sudo docker run --rm -it --runtime=nvidia --name=vllm-download \
+      nvcr.io/nvidia/vllm:25.09-py3
+
+    # Inside container, trigger model download:
+    python -c "
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained('openai/gpt-oss-120b')
+    print('Model downloaded successfully!')
+    "
+
+    # 2. Copy model cache to host (jetson-containers structure)
+    mkdir -p $ROOT/data/models
+    docker cp vllm-download:/root/.cache/huggingface $ROOT/data/models/
+
+    # 3. Verify model size
+    du -h $ROOT/data/models/huggingface/hub/models--openai--gpt-oss-120b/
+    # Should show ~122GB
+    ```
+
+    **Distribute to all workshop units:**
+    ```bash
+    # Copy to each Thor unit (adjust IPs/hostnames)
+    for unit in thor-{01..60}; do
+      rsync -av --progress $ROOT/data/models/ ${unit}:$ROOT/data/models/
+    done
+    ```
+
+### Exercise: Let's get working!
 
 ```bash
-sudo mkdir -p /etc/encodings
-sudo wget https://openaipublic.blob.core.windows.net/encodings/cl100k_base.tiktoken -O /etc/encodings/cl100k_base.tiktoken
-sudo wget https://openaipublic.blob.core.windows.net/encodings/o200k_base.tiktoken -O /etc/encodings/o200k_base.tiktoken
-export TIKTOKEN_ENCODINGS_BASE=/etc/encodings
+docker run --rm -it \
+  --network host \
+  --shm-size=16g \
+  --ulimit memlock=-1 \
+  --ulimit stack=67108864 \
+  --runtime=nvidia \
+  --name=vllm \
+  -v $ROOT/data/models/huggingface:/root/.cache/huggingface \
+  -v $ROOT/data/vllm_cache:/root/.cache/vllm \
+  nvcr.io/nvidia/vllm:25.09-py3
 ```
 
-### 2) Start vLLM (example large model)
+**Verify pre-downloaded model:**
+```bash
+# Inside the container, check if model is available
+ls -la /root/.cache/huggingface/hub/models--openai--gpt-oss-120b/
+du -h /root/.cache/huggingface/hub/models--openai--gpt-oss-120b/
+# Should show ~122GB - no download needed!
+```
+
+Trick to make gpt-oss work.
 
 ```bash
+mkdir /etc/encodings
+wget https://openaipublic.blob.core.windows.net/encodings/cl100k_base.tiktoken -O /etc/encodings/cl100k_base.tiktoken
+wget https://openaipublic.blob.core.windows.net/encodings/o200k_base.tiktoken -O /etc/encodings/o200k_base.tiktoken
+export TIKTOKEN_ENCODINGS_BASE=/etc/encodings
 vllm serve openai/gpt-oss-120b
 ```
 
-> Replace with your chosen open-weight checkpoint if your org/lab uses a different model namespace.
+Actual serving
 
-### 3) Launch Open WebUI bound to vLLM
-
-```bash
-docker run -d --network=host   -v open-webui:/app/backend/data   -e OPENAI_API_BASE_URL=http://0.0.0.0:8000/v1   --name open-webui --restart always   ghcr.io/open-webui/open-webui:main
+> Please note that the vllm serve command might take some time, but you’ll know once it’s ready when you see this:
+> ```bash
+> (APIServer pid=92) INFO:     Waiting for application startup.
+> (APIServer pid=92) INFO:     Application startup complete.
 ```
 
-Open your browser to Open WebUI (default `http://<thor-ip>:8080/` if unchanged). Select your served model in the UI and chat.
+### Test the API (Optional)
 
-!!! success "Key takeaway"
-    You have a **large model** running **entirely on the edge**. This unlocks bigger models, larger contexts, multiple concurrent models, and high-concurrency inference—all **without cloud latency or data egress**.
+Test your vLLM server is working:
+
+```bash
+# Check available models
+curl http://localhost:8000/v1/models
+
+# Test chat completion
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "openai/gpt-oss-120b",
+    "messages": [{"role": "user", "content": "Hello! Tell me about Jetson Thor."}],
+    "max_tokens": 100
+  }'
+```
+
+!!! note "Understanding the Serving Architecture"
+    **What does "serve" mean?**
+
+    When vLLM "serves" a model, it:
+
+    - ✅ **Loads the model** into GPU memory (GPT-OSS-120B)
+    - ✅ **Creates an API server** listening on port 8000
+    - ✅ **Exposes HTTP endpoints** for inference requests
+    - ✅ **Handles concurrent requests** with optimized batching
+
+    **What is vLLM exposing?**
+
+    vLLM creates a **REST API server** at `http://localhost:8000` with endpoints like:
+
+    - `/v1/chat/completions` - Chat-style conversations
+    - `/v1/completions` - Text completion
+    - `/v1/models` - List available models
+    - `/health` - Server health check
+
+    **OpenAI-Compatible Endpoint**
+
+    vLLM implements the **same API format** as OpenAI's GPT models:
+
+    - ✅ **Same request format** - JSON with `messages`, `model`, `max_tokens`
+    - ✅ **Same response format** - Structured JSON responses
+    - ✅ **Drop-in replacement** - Existing OpenAI code works unchanged
+    - ✅ **Local inference** - No data leaves your device
+
+### Launch Open WebUI
+
+Start the web interface for easy interaction:
+
+```bash
+docker run -d \
+  --network=host \
+  -v ${HOME}/open-webui:/app/backend/data \
+  -e OPENAI_API_BASE_URL=http://0.0.0.0:8000/v1 \
+  --name open-webui --restart always \
+  ghcr.io/open-webui/open-webui:main
+```
+
+**Access the interface:**
+
+1. Open your browser to `http://localhost:8080`
+2. Create an account (stored locally)
+3. Start chatting with your local 120B model!
+
+!!! note "About Open WebUI"
+    **What role does Open WebUI play?**
+
+    Open WebUI is a **web-based chat interface** that:
+
+    - 🌐 **Provides a familiar ChatGPT-like UI** in your browser
+    - 🔌 **Connects to your local vLLM server** (not OpenAI's servers)
+    - 💬 **Handles conversations** with chat history and context
+    - 🎛️ **Offers model controls** (temperature, max tokens, etc.)
+    - 📊 **Shows performance metrics** (tokens/sec, response time)
+
+    **Architecture Flow:**
+    ```
+    You → Open WebUI (Browser) → vLLM Server → GPT-OSS-120B → Response
+    ```
+
+    **Key Benefits:**
+
+    - 🔒 **Complete privacy** - No data sent to external servers
+    - ⚡ **Local performance** - Thor's inference speed
+    - 🎯 **Production testing** - Real application interface
+    - 📈 **Performance monitoring** - See actual tokens/sec
+
+
+### Troubleshooting vLLM Launch Issues
+
+!!! warning "Common Issue: NVML Errors and Model Architecture Failures"
+    If you see errors like:
+    - `Can't initialize NVML`
+    - `NVMLError_Unknown: Unknown Error`
+    - `Model architectures ['GptOssForCausalLM'] failed to be inspected`
+
+    **Root Cause**: Malformed Docker daemon configuration
+
+**Check Docker daemon.json:**
+```bash
+cat /etc/docker/daemon.json
+```
+
+**If the file is missing the default-runtime configuration:**
+```json
+{
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    }
+}
+// ❌ Missing "default-runtime": "nvidia" !
+```
+
+**Fix with complete configuration:**
+```bash
+sudo nano /etc/docker/daemon.json
+```
+
+**Correct content:**
+```json
+{
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    },
+    "default-runtime": "nvidia"
+}
+```
+
+**Apply the fix:**
+```bash
+# Restart Docker daemon
+sudo systemctl restart docker
+
+# Verify Docker is running
+sudo systemctl status docker
+
+# Test NVIDIA runtime (Thor-compatible CUDA 13)
+docker run --rm --runtime=nvidia nvcr.io/nvidia/cuda:13.0.0-runtime-ubuntu24.04 nvidia-smi
+
+# Restart your vLLM container
+docker stop vllm  # if running
+# Then relaunch with the corrected Docker configuration
+```
+
+!!! tip "If Docker Runtime Issues Persist"
+    **Try a system reboot** - this often resolves Docker runtime configuration issues:
+
+    ```bash
+    sudo reboot
+    ```
+
+    **Why reboot helps:**
+    - Complete Docker daemon restart with new configuration
+    - Fresh NVIDIA driver/runtime initialization
+    - Proper CDI device registration
+    - All system services start in correct order
+
+    **After reboot, test immediately:**
+    ```bash
+    docker run --rm --runtime=nvidia nvcr.io/nvidia/cuda:13.0.0-runtime-ubuntu24.04 nvidia-smi
+    ```
+
+    **Tested on:** L4T (Jetson Linux) r38.2.2
+
+### GPU Memory Management Issues
+
+!!! warning "Stuck GPU Memory Allocations"
+    **Symptom:** vLLM fails with "insufficient GPU memory" despite stopping containers
+
+    **Example error:**
+    ```
+    ValueError: Free memory on device (14.45/122.82 GiB) on startup is less than
+    desired GPU memory utilization (0.7, 85.98 GiB)
+    ```
+
+**Diagnosis:**
+```bash
+# Check current GPU memory usage
+jtop
+# Expected baseline: ~3-6GB system usage
+# Problem: 25GB+ or 100GB+ unexplained usage
+```
+
+**Solution sequence:**
+```bash
+# 1. Stop all containers
+docker stop $(docker ps -q) 2>/dev/null
+docker rm $(docker ps -aq) 2>/dev/null
+
+# 2. Restart Docker daemon
+sudo systemctl restart docker
+
+# 3. Check if memory cleared
+jtop
+
+# 4. If memory still high (>10GB baseline), reboot system
+sudo reboot
+```
+
+!!! info "Root Cause Investigation"
+    This appears to be related to GPU memory allocations not being properly released at the driver level. We're investigating the exact cause and will update this section with a more targeted solution.
+
+    **Workaround for now:** System reboot reliably clears stuck allocations.
+
+### What to Expect: Successful vLLM Startup
+
+When everything works correctly, you should see output like this:
+
+```
+(APIServer pid=161) INFO: Resolved architecture: GptOssForCausalLM
+Parse safetensors files: 100%|████████████████████| 15/15 [00:01<00:00, 14.70it/s]
+(APIServer pid=161) INFO: Using max model len 131072
+(APIServer pid=161) WARNING: mxfp4 quantization is not fully optimized yet...
+Loading safetensors checkpoint shards: 100%|████████████████████| 15/15 [00:24<00:00,  1.64s/it]
+INFO: Loading weights took 24.72 seconds
+```
+
+**Key indicators of success:**
+
+- ✅ **Architecture resolved**: `GptOssForCausalLM`
+- ✅ **Fast loading**: ~25 seconds (vs. hours without pre-cache!)
+- ✅ **Quantization active**: `mxfp4` (FP4) for optimal performance
+- ✅ **No NVML errors**: GPU acceleration working properly
+
+!!! success "Workshop Magic: Pre-cached Models"
+    The **24-second loading time** demonstrates the power of our pre-workshop setup! Without the pre-downloaded model cache, attendees would wait hours for the 122GB download. This is the Thor advantage in action! 🚀
+
+### Startup Time Optimization for Workshops
+
+**Expected Timing Breakdown:**
+
+- ✅ **Model Loading**: ~35 seconds (excellent with pre-cache)
+- ⚠️ **Torch Compile**: ~45 seconds (first-time compilation)
+- ⚠️ **CUDA Graphs**: ~21 seconds (optimization setup)
+- 🏁 **Total**: ~150 seconds (2.5 minutes to full readiness)
+
+**The torch.compile bottleneck** is a one-time cost that creates optimized inference kernels. For workshops, we have two strategies:
+
+!!! tip "Strategy 1: Pre-warm Compilation Cache (Recommended)"
+    **For organizers**: Generate compilation cache once, distribute to all units:
+
+    ```bash
+    # 1. Pre-workshop: Generate compilation cache
+    docker run --rm -it --runtime=nvidia --name=vllm-warmup \
+      -v $ROOT/data/models/huggingface:/root/.cache/huggingface \
+      -v $ROOT/data/vllm_cache:/root/.cache/vllm \
+      nvcr.io/nvidia/vllm:25.09-py3
+
+    # Inside container: Start server once to generate cache
+    vllm serve openai/gpt-oss-120b
+    # Wait for "Application startup complete", then Ctrl+C
+
+    # 2. Distribute cache to all workshop units
+    for unit in thor-{01..60}; do
+      rsync -av $ROOT/data/vllm_cache/ ${unit}:$ROOT/data/vllm_cache/
+    done
+
+    # 3. Workshop containers use pre-warmed cache
+    docker run --rm -it --runtime=nvidia --name=vllm \
+      -v $ROOT/data/models/huggingface:/root/.cache/huggingface \
+      -v $ROOT/data/vllm_cache:/root/.cache/vllm \
+      nvcr.io/nvidia/vllm:25.09-py3
+    ```
+
+!!! info "Strategy 2: Fast Startup Mode (Demo-friendly)"
+    **For quick demos**: Reduce optimization for faster startup:
+
+    ```bash
+    # Faster startup with reduced optimization (~60s total)
+    vllm serve openai/gpt-oss-120b \
+      --compilation-config '{"level": 0}' \
+      --disable-custom-all-reduce
+    ```
+
+**Other troubleshooting steps:**
+
+1. **Verify user permissions:**
+   ```bash
+   groups $USER  # Should include 'docker'
+   ```
+
+2. **Check GPU accessibility:**
+   ```bash
+   nvidia-smi
+   # Or test via Docker:
+   docker run --rm --runtime=nvidia nvcr.io/nvidia/cuda:13.0.0-runtime-ubuntu24.04 nvidia-smi
+   ```
+
+3. **Try alternative model names:**
+   ```bash
+   vllm serve microsoft/gpt-oss-120b  # Alternative naming
+   ```
+
+4. **Use conservative settings:**
+   ```bash
+   vllm serve openai/gpt-oss-120b \
+     --gpu-memory-utilization 0.7 \
+     --max-model-len 4096
+   ```
+
+Open WebUI
+
+```bash
+docker run -d --network=host -v open-webui:/app/backend/data -e OPENAI_API_BASE_URL=http://0.0.0.0:8000/v1 --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+```
 
 ---
 
-## Two Ways to Build an LLM App
-
-1. **Quality-First (recommended)**
-   Start with a model that **meets task quality**, then optimize stepwise, **re-checking quality** each time.
-
-2. **Capacity-First**
-   Fit the **largest** model possible (e.g., 4-bit), then hope it covers tasks. Fast to demo, but harder to guarantee task quality.
-
-This tutorial implements the **Quality-First** path and shows where FP4 + speculative decoding can shine without further quality loss.
-
----
-
-## Part 1 — Establish a Quality Baseline (FP16)
+## 🔧 Optimize: Precision Engineering (FP16 → FP8 → FP4)
 
 We’ll use **Llama-3.1-8B-Instruct (FP16)** as our baseline.
 
@@ -109,7 +566,7 @@ Once loaded, select the model in Open WebUI.
 
 ---
 
-## Part 2 — “Safe First Step”: Quantize to FP8
+### Step 1: "Safe First Step" - Quantize to FP8
 
 FP8 reduces memory bandwidth/footprint and **often matches FP16 quality** for many tasks.
 
@@ -124,7 +581,7 @@ Compare **TTFT**, **tokens/sec**, and **answer quality** vs. FP16.
 
 ---
 
-## Part 3 — Push Further: FP4
+### Step 2: Push Further - FP4 Quantization
 
 FP4 halves memory again vs. FP8 and is **much faster**, but may introduce noticeable quality drift (hallucinations, repetition).
 
@@ -144,7 +601,7 @@ Run the **same prompt** and evaluate:
 
 ---
 
-## Part 4 — FP4 + Speculative Decoding (EAGLE3)
+### Step 3: Advanced Optimization - FP4 + Speculative Decoding (EAGLE3)
 
 Speculative decoding pairs a small **draft model** with your main model. The main model **verifies** multiple drafted tokens in one step—**same final output**, higher throughput.
 
@@ -161,6 +618,7 @@ vllm serve nvidia/Llama-3.1-8B-Instruct-FP4   --trust_remote_code   --speculativ
 Select the FP4 model again in Open WebUI and re-run the **same prompt**.
 
 **Expect:**
+
 - **Throughput**: highest so far
 - **Quality**: **identical** to plain FP4 (speculative decoding does not alter the final output)
 
