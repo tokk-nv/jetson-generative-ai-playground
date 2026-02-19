@@ -5,6 +5,7 @@ short_description: "NVIDIA's 8B parameter vision-language model with advanced ch
 family: "NVIDIA Cosmos Reason"
 icon: "🧠"
 is_new: true
+hide_run_button: true
 order: 3
 type: "Multimodal"
 memory_requirements: "18GB RAM"
@@ -23,7 +24,7 @@ supported_inference_engines:
 
 [NVIDIA Cosmos Reason 2 8B](https://huggingface.co/nvidia/Cosmos-Reason2-8B) is the larger variant in the Cosmos Reason 2 family, offering enhanced reasoning performance with 8 billion parameters. It provides stronger chain-of-thought reasoning capabilities compared to the 2B variant, suitable for more demanding vision-language tasks on Jetson.
 
-> **Note:** The HuggingFace version of this model does not fit on Orin. You must download the **[FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8)** and mount it as a volume. Set `MODEL_PATH` to the downloaded checkpoint directory before running.
+This model uses an **[FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8)** which is downloaded via the NGC CLI and mounted into the vLLM container as a volume.
 
 ## Key Capabilities
 
@@ -33,14 +34,55 @@ supported_inference_engines:
 - **Scene Analysis**: Comprehensive and detailed analysis of complex visual scenes
 - **Video Understanding**: Supports video frame analysis for temporal reasoning
 
+## Step 1: Install and Configure the NGC CLI
+
+The [NGC CLI](https://org.ngc.nvidia.com/setup/installers/cli) is needed to download the FP8 model checkpoint from the [NVIDIA NGC Catalog](https://catalog.ngc.nvidia.com/).
+
+```bash
+# Download the NGC CLI for ARM64
+wget -O ngccli_arm64.zip https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/4.13.0/files/ngccli_arm64.zip
+unzip ngccli_arm64.zip
+chmod u+x ngc-cli/ngc
+export PATH="$PATH:$(pwd)/ngc-cli"
+```
+
+Configure the CLI with your NGC API key (generate one at [NGC API Key setup](https://org.ngc.nvidia.com/setup/api-key)):
+
+```bash
+ngc config set
+```
+
+You will be prompted for your **API Key**, **CLI output format** (choose `json` or `ascii`), and **org** (press Enter for default).
+
+## Step 2: Download the FP8 Model
+
+```bash
+ngc registry model download-version "nim/nvidia/cosmos-reason2-8b:1208-fp8-static-kv8"
+```
+
+This creates a directory called `cosmos-reason2-8b_v1208-fp8-static-kv8/`. Set the path for Docker:
+
+```bash
+MODEL_PATH="$(pwd)/cosmos-reason2-8b_v1208-fp8-static-kv8"
+```
+
+## Step 3: Serve with vLLM
+
+Free cached memory before launching:
+
+```bash
+sudo sysctl -w vm.drop_caches=3
+```
+
 ## Platform Support
 
 | | Jetson AGX Thor | Jetson AGX Orin (64GB) |
 |---|---|---|
 | **vLLM Container** | `nvcr.io/nvidia/vllm:26.01-py3` | `ghcr.io/nvidia-ai-iot/vllm:r36.4-tegra-aarch64-cu126-22.04` |
-| **Model** | FP8 via NGC (volume mount) | FP8 via NGC (volume mount) |
 | **Max Model Length** | 8192 tokens | 8192 tokens |
 | **GPU Memory Util** | 0.8 | 0.8 |
+
+> **Note:** Due to the 8B model size, this model requires at least Jetson AGX Orin with 64GB or Jetson AGX Thor.
 
 ## Inputs and Outputs
 
@@ -62,4 +104,5 @@ supported_inference_engines:
 ## Additional Resources
 
 - [NGC FP8 Checkpoint](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8) — FP8 quantized model for Jetson deployment
+- [NGC CLI Installers](https://org.ngc.nvidia.com/setup/installers/cli)
 - [Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui) — real-time webcam-to-VLM interface
