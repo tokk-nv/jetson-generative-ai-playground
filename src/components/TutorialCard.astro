@@ -32,7 +32,7 @@ const categoryColor = categoryColors[tutorial.data.category] || categoryColors['
   data-category={tutorial.data.category}
   data-tags={tutorial.data.tags.join(' ')}
 >
-  <a href={'/tutorials/' + tutorial.slug} class="absolute inset-0 z-10" aria-label={'Open ' + tutorial.data.title}></a>
+  <a href={'/tutorials/' + (tutorial.slug.includes('/') ? tutorial.slug.split('/').pop() : tutorial.slug)} class="absolute inset-0 z-10" aria-label={'Open ' + tutorial.data.title}></a>
   
   <div class="p-6 flex flex-col h-full">
     <div class="flex items-center justify-between gap-2 mb-4">

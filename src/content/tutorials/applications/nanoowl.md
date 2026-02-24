@@ -1,7 +1,7 @@
 ---
 title: "Tutorial - NanoOWL"
 description: "Run NanoOWL, OWL-ViT optimized to run real-time on Jetson with NVIDIA TensorRT for open-vocabulary object detection."
-category: "Multimodal"
+category: "Applications"
 section: "Vision Transformers"
 order: 1
 tags: ["nanoowl", "owl-vit", "vision", "tensorrt", "object-detection", "jetson", "real-time"]

@@ -23,6 +23,8 @@ export default defineConfig({
     '/initial_setup_jon_sdkm': '/tutorials/initial-setup-sdk-manager/',
     '/tips_ssd-docker.html': '/tutorials/ssd-docker-setup/',
     '/tips_ssd-docker': '/tutorials/ssd-docker-setup/',
+    '/tips_ram-optimization.html': '/tutorials/ram-optimization/',
+    '/tips_ram-optimization': '/tutorials/ram-optimization/',
     
     // Tutorials
     '/tutorial_ollama.html': '/tutorials/ollama/',

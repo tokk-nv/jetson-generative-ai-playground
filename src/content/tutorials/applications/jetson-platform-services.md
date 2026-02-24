@@ -1,7 +1,7 @@
 ---
 title: "Jetson Platform Services"
 description: "Build and deploy AI-powered edge applications using Jetson Platform Services (JPS). Learn to create modular microservices for video analytics, VLM alerts, and zero-shot detection."
-category: "Multimodal"
+category: "Applications"
 section: "AI Microservices"
 order: 2
 tags: ["jps", "jetson", "microservices", "vlm", "deepstream", "video-analytics", "edge-ai", "nanoowl"]
