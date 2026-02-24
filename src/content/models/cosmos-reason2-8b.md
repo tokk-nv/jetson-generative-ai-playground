@@ -5,7 +5,6 @@ short_description: "NVIDIA's 8B parameter vision-language model with advanced ch
 family: "NVIDIA Cosmos Reason"
 icon: "🧠"
 is_new: true
-hide_run_button: true
 order: 3
 type: "Multimodal"
 memory_requirements: "18GB RAM"
@@ -15,6 +14,10 @@ hf_checkpoint: "nvidia/Cosmos-Reason2-8B"
 huggingface_url: "https://huggingface.co/nvidia/Cosmos-Reason2-8B"
 minimum_jetson: "AGX Orin"
 supported_inference_engines:
+  - engine: "llama.cpp"
+    type: "Container"
+    run_command_orin: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q8_0"
+    run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q8_0"
   - engine: "vLLM"
     type: "Container"
     install_command: "ngc registry model download-version \"nim/nvidia/cosmos-reason2-8b:1208-fp8-static-kv8\""
@@ -24,8 +27,6 @@ supported_inference_engines:
 
 [NVIDIA Cosmos Reason 2 8B](https://huggingface.co/nvidia/Cosmos-Reason2-8B) is the larger variant in the Cosmos Reason 2 family, offering enhanced reasoning performance with 8 billion parameters. It provides stronger chain-of-thought reasoning capabilities compared to the 2B variant, suitable for more demanding vision-language tasks on Jetson.
 
-This model uses an **[FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8)** which is downloaded via the NGC CLI and mounted into the vLLM container as a volume.
-
 ## Key Capabilities
 
 - **Enhanced Reasoning**: Stronger chain-of-thought reasoning compared to the 2B variant
@@ -34,47 +35,44 @@ This model uses an **[FP8 quantized checkpoint from NGC](https://catalog.ngc.nvi
 - **Scene Analysis**: Comprehensive and detailed analysis of complex visual scenes
 - **Video Understanding**: Supports video frame analysis for temporal reasoning
 
-## Step 1: Install and Configure the NGC CLI
+## Running with llama.cpp
 
-The [NGC CLI](https://org.ngc.nvidia.com/setup/installers/cli) is needed to download the FP8 model checkpoint from the [NVIDIA NGC Catalog](https://catalog.ngc.nvidia.com/).
+GGUF models are downloaded automatically:
 
 ```bash
-# Download the NGC CLI for ARM64
-wget -O ngccli_arm64.zip https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/4.13.0/files/ngccli_arm64.zip
-unzip ngccli_arm64.zip
-chmod u+x ngc-cli/ngc
-export PATH="$PATH:$(pwd)/ngc-cli"
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q8_0
 ```
 
-Configure the CLI with your NGC API key (generate one at [NGC API Key setup](https://org.ngc.nvidia.com/setup/api-key)):
+Available quantizations: Q8_0 (8.2 GB, best quality), Q4_K_M (4.7 GB, smaller footprint), F16 (16 GB, full precision). The built-in web UI is at `http://localhost:8080` with an OpenAI-compatible API on the same port.
+
+## Running with vLLM (AGX Orin / Thor)
+
+The vLLM path uses an [FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8) downloaded via the NGC CLI.
+
+### Step 1: Install and Configure the NGC CLI
 
 ```bash
+wget -O ngccli_arm64.zip https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/4.13.0/files/ngccli_arm64.zip
+unzip ngccli_arm64.zip && chmod u+x ngc-cli/ngc
+export PATH="$PATH:$(pwd)/ngc-cli"
 ngc config set
 ```
 
-You will be prompted for your **API Key**, **CLI output format** (choose `json` or `ascii`), and **org** (press Enter for default).
-
-## Step 2: Download the FP8 Model
+### Step 2: Download the FP8 Model
 
 ```bash
 ngc registry model download-version "nim/nvidia/cosmos-reason2-8b:1208-fp8-static-kv8"
-```
-
-This creates a directory called `cosmos-reason2-8b_v1208-fp8-static-kv8/`. Set the path for Docker:
-
-```bash
 MODEL_PATH="$(pwd)/cosmos-reason2-8b_v1208-fp8-static-kv8"
 ```
 
-## Step 3: Serve with vLLM
-
-Free cached memory before launching:
+### Step 3: Serve
 
 ```bash
 sudo sysctl -w vm.drop_caches=3
 ```
-
-## Platform Support
 
 | | Jetson AGX Thor | Jetson AGX Orin (64GB) |
 |---|---|---|
@@ -84,25 +82,15 @@ sudo sysctl -w vm.drop_caches=3
 
 > **Note:** Due to the 8B model size, this model requires at least Jetson AGX Orin with 64GB or Jetson AGX Thor.
 
-## Inputs and Outputs
-
-**Input:**
-- Text prompts and images
-- Supports video frame analysis via `--media-io-kwargs`
-
-**Output:**
-- Generated text with chain-of-thought reasoning traces
-- Spatial analysis, anomaly detection results, and scene descriptions
-
 ## Cosmos Reason 2 Family
 
 | Model | Parameters | Memory | Best For |
 |---|---|---|---|
-| [Cosmos Reason 2 2B](/models/cosmos-reason2-2b) | 2B | 8GB RAM | Edge deployment, Orin Super Nano |
+| [Cosmos Reason 2 2B](/models/cosmos-reason2-2b) | 2B | 8GB RAM | Edge deployment, Orin Nano |
 | **Cosmos Reason 2 8B** | 8B | 18GB RAM | Higher accuracy, AGX Orin / Thor |
 
 ## Additional Resources
 
-- [NGC FP8 Checkpoint](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8) — FP8 quantized model for Jetson deployment
-- [NGC CLI Installers](https://org.ngc.nvidia.com/setup/installers/cli)
-- [Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui) — real-time webcam-to-VLM interface
+- [GGUF Quantizations](https://huggingface.co/Kbenkhaled/Cosmos-Reason2-8B-GGUF) - Q8_0, Q4_K_M, and F16 for llama.cpp
+- [NGC FP8 Checkpoint](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8) - FP8 quantized model for vLLM
+- [Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui) - real-time webcam-to-VLM interface
