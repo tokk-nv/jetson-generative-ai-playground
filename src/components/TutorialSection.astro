@@ -99,7 +99,7 @@ const sectionNames = Object.keys(groupedTutorials);
           <div class="space-y-1">
             {groupedTutorials[sectionName].map(tutorial => (
               <a 
-                href={`/tutorials/${tutorial.slug}`}
+                href={`/tutorials/${tutorial.slug.includes('/') ? tutorial.slug.split('/').pop() : tutorial.slug}`}
                 class="tutorial-item group/item flex items-center gap-3 p-3 rounded-lg hover:bg-nvidia-gray-50 transition-all duration-150 border border-transparent hover:border-nvidia-gray-200"
               >
                 <div class="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-nvidia-gray-300 group-hover/item:bg-nvidia-green transition-colors"></div>

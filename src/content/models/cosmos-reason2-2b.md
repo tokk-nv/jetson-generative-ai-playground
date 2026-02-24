@@ -26,7 +26,7 @@ supported_inference_engines:
     run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192"
 ---
 
-[NVIDIA Cosmos Reasoning 2B](https://huggingface.co/nvidia/Cosmos-Reason2-2B) is a compact vision-language model with built-in chain-of-thought reasoning capabilities. Despite its small 2B parameter size, it can perform spatial reasoning, anomaly detection, and detailed scene analysis, making it well-suited for edge deployment on Jetson.
+[NVIDIA Cosmos Reason 2B](https://huggingface.co/nvidia/Cosmos-Reason2-2B) is a compact vision-language model with built-in chain-of-thought reasoning capabilities. Despite its small 2B parameter size, it can perform spatial reasoning, anomaly detection, and detailed scene analysis, making it well-suited for edge deployment on Jetson.
 
 ## Key Capabilities
 
@@ -35,7 +35,17 @@ supported_inference_engines:
 - **Scene Analysis**: Provides detailed descriptions and analysis of visual content
 - **Chain-of-thought Reasoning**: Generates reasoning traces before concluding with a final response
 
-## Running with vLLM (AGX Orin / Thor)
+## Inputs and Outputs
+
+**Input:**
+- Text prompts and images
+- Supports video frame analysis via `--media-io-kwargs`
+
+**Output:**
+- Generated text with chain-of-thought reasoning traces
+- Spatial analysis, anomaly detection results, and scene descriptions
+
+## Running with vLLM  
 
 The vLLM path uses an [FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-2b/files?version=1208-fp8-static-kv8) downloaded via the NGC CLI.
 
@@ -61,24 +71,11 @@ MODEL_PATH="$(pwd)/cosmos-reason2-2b_v1208-fp8-static-kv8"
 
 <div class="device-tabs">
 <div class="device-tab-bar">
-<button class="device-tab active" data-target="orin">Jetson Orin</button>
-<button class="device-tab" data-target="thor">Jetson Thor</button>
+<button class="device-tab active" data-target="thor">Jetson Thor</button>
+<button class="device-tab" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="nano">Orin Nano</button>
 </div>
-<div class="device-panel" data-panel="orin">
-
-```bash
-sudo sysctl -w vm.drop_caches=3
-
-sudo docker run -it --rm --runtime=nvidia --network host \
-  -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
-  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
-  vllm serve /models/cosmos-reason2-2b \
-    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
-    --media-io-kwargs '{"video": {"num_frames": -1}}'
-```
-
-</div>
-<div class="device-panel" data-panel="thor" style="display:none">
+<div class="device-panel" data-panel="thor">
 
 ```bash
 sudo sysctl -w vm.drop_caches=3
@@ -92,16 +89,62 @@ sudo docker run -it --rm --runtime=nvidia --network host \
 ```
 
 </div>
+<div class="device-panel" data-panel="orin" style="display:none">
+
+```bash
+sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
+  vllm serve /models/cosmos-reason2-2b \
+    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}'
+```
+
+</div>
+<div class="device-panel" data-panel="nano" style="display:none">
+
+On Orin Super Nano, use memory-constrained flags:
+
+```bash
+sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
+  vllm serve /models/cosmos-reason2-2b \
+    --enforce-eager --max-model-len 768 \
+    --max-num-batched-tokens 768 \
+    --gpu-memory-utilization 0.52 \
+    --max-num-seqs 1 --enable-chunked-prefill \
+    --limit-mm-per-prompt '{"image":1}'
+```
+
+You may also need to reduce the image resolution in `preprocessor_config.json` — see the [full tutorial](/tutorials/cosmos-reason2-vlm/) for details.
+
+</div>
 </div>
 
 ## Running with llama.cpp (Recommended for Orin Nano)
 
 <div class="device-tabs">
 <div class="device-tab-bar">
-<button class="device-tab active" data-target="orin">Jetson Orin</button>
-<button class="device-tab" data-target="thor">Jetson Thor</button>
+<button class="device-tab active" data-target="thor">Jetson Thor</button>
+<button class="device-tab" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="nano">Orin Nano</button>
 </div>
-<div class="device-panel" data-panel="orin">
+<div class="device-panel" data-panel="thor">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192
+```
+
+</div>
+<div class="device-panel" data-panel="orin" style="display:none">
 
 ```bash
 sudo docker run -it --rm --pull always --runtime=nvidia --network host \
@@ -111,12 +154,12 @@ sudo docker run -it --rm --pull always --runtime=nvidia --network host \
 ```
 
 </div>
-<div class="device-panel" data-panel="thor" style="display:none">
+<div class="device-panel" data-panel="nano" style="display:none">
 
 ```bash
 sudo docker run -it --rm --pull always --runtime=nvidia --network host \
   -v $HOME/.cache/huggingface:/root/.cache/huggingface \
-  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
   llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192
 ```
 

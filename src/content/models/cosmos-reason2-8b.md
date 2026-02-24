@@ -36,7 +36,7 @@ supported_inference_engines:
 - **Scene Analysis**: Comprehensive and detailed analysis of complex visual scenes
 - **Video Understanding**: Supports video frame analysis for temporal reasoning
 
-## Running with vLLM (AGX Orin / Thor)
+## Running with vLLM  
 
 The vLLM path uses an [FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8) downloaded via the NGC CLI.
 
@@ -62,24 +62,10 @@ MODEL_PATH="$(pwd)/cosmos-reason2-8b_v1208-fp8-static-kv8"
 
 <div class="device-tabs">
 <div class="device-tab-bar">
-<button class="device-tab active" data-target="orin">Jetson Orin</button>
-<button class="device-tab" data-target="thor">Jetson Thor</button>
+<button class="device-tab active" data-target="thor">Jetson Thor</button>
+<button class="device-tab" data-target="orin">Jetson Orin</button>
 </div>
-<div class="device-panel" data-panel="orin">
-
-```bash
-sudo sysctl -w vm.drop_caches=3
-
-sudo docker run -it --rm --runtime=nvidia --network host \
-  -v $MODEL_PATH:/models/cosmos-reason2-8b:ro \
-  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
-  vllm serve /models/cosmos-reason2-8b \
-    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
-    --media-io-kwargs '{"video": {"num_frames": -1}}'
-```
-
-</div>
-<div class="device-panel" data-panel="thor" style="display:none">
+<div class="device-panel" data-panel="thor">
 
 ```bash
 sudo sysctl -w vm.drop_caches=3
@@ -93,31 +79,45 @@ sudo docker run -it --rm --runtime=nvidia --network host \
 ```
 
 </div>
-</div>
-
-## Running with llama.cpp (Recommended for Orin Nano)
-
-<div class="device-tabs">
-<div class="device-tab-bar">
-<button class="device-tab active" data-target="orin">Jetson Orin</button>
-<button class="device-tab" data-target="thor">Jetson Thor</button>
-</div>
-<div class="device-panel" data-panel="orin">
+<div class="device-panel" data-panel="orin" style="display:none">
 
 ```bash
-sudo docker run -it --rm --pull always --runtime=nvidia --network host \
-  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
-  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
-  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192
+sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-8b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
+  vllm serve /models/cosmos-reason2-8b \
+    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}'
 ```
 
 </div>
-<div class="device-panel" data-panel="thor" style="display:none">
+</div>
+
+## Running with llama.cpp (Alternative Option)
+
+<div class="device-tabs">
+<div class="device-tab-bar">
+<button class="device-tab active" data-target="thor">Jetson Thor</button>
+<button class="device-tab" data-target="orin">Jetson Orin</button>
+</div>
+<div class="device-panel" data-panel="thor">
 
 ```bash
 sudo docker run -it --rm --pull always --runtime=nvidia --network host \
   -v $HOME/.cache/huggingface:/root/.cache/huggingface \
   ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192
+```
+
+</div>
+<div class="device-panel" data-panel="orin" style="display:none">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
   llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192
 ```
 

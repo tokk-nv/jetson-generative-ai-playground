@@ -1,7 +1,7 @@
 ---
 title: "Live VLM WebUI"
 description: "A convenient interface for evaluating Vision Language Models in real-time with WebRTC webcam streaming, OpenAI-compatible API support, and interactive prompt editor."
-category: "Multimodal"
+category: "Applications"
 section: "Vision Language Models"
 order: 1
 tags: ["vlm", "vision", "camera", "live-streaming", "webrtc", "ollama", "gemma", "qwen", "llama-vision", "multimodal"]
