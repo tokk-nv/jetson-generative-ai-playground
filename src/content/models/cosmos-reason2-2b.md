@@ -1,0 +1,136 @@
+---
+title: "Cosmos Reason 2 2B"
+model_id: "cosmos-reason2-2b"
+short_description: "NVIDIA's compact 2B parameter vision-language model with built-in chain-of-thought reasoning for edge deployment"
+family: "NVIDIA Cosmos Reason"
+icon: "🧠"
+is_new: true
+order: 2
+type: "Multimodal"
+memory_requirements: "8GB RAM"
+precision: "FP8"
+model_size: "5GB"
+hf_checkpoint: "nvidia/Cosmos-Reason2-2B"
+huggingface_url: "https://huggingface.co/nvidia/Cosmos-Reason2-2B"
+minimum_jetson: "Orin Nano"
+hide_run_button: true
+supported_inference_engines:
+  - engine: "vLLM"
+    type: "Container"
+    install_command: "ngc registry model download-version \"nim/nvidia/cosmos-reason2-2b:1208-fp8-static-kv8\""
+    run_command_orin: "sudo docker run -it --rm --runtime=nvidia --network host -v $MODEL_PATH:/models/cosmos-reason2-2b:ro ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin vllm serve /models/cosmos-reason2-2b --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 --media-io-kwargs '{\"video\": {\"num_frames\": -1}}'"
+    run_command_thor: "sudo docker run -it --rm --runtime=nvidia --network host -v $MODEL_PATH:/models/cosmos-reason2-2b:ro ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor vllm serve /models/cosmos-reason2-2b --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 --media-io-kwargs '{\"video\": {\"num_frames\": -1}}'"
+  - engine: "llama.cpp"
+    type: "Container"
+    run_command_orin: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192"
+    run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192"
+---
+
+[NVIDIA Cosmos Reasoning 2B](https://huggingface.co/nvidia/Cosmos-Reason2-2B) is a compact vision-language model with built-in chain-of-thought reasoning capabilities. Despite its small 2B parameter size, it can perform spatial reasoning, anomaly detection, and detailed scene analysis, making it well-suited for edge deployment on Jetson.
+
+## Key Capabilities
+
+- **Spatial Reasoning**: Understands spatial relationships between objects in scenes
+- **Anomaly Detection**: Identifies unusual patterns or objects in visual data
+- **Scene Analysis**: Provides detailed descriptions and analysis of visual content
+- **Chain-of-thought Reasoning**: Generates reasoning traces before concluding with a final response
+
+## Running with vLLM (AGX Orin / Thor)
+
+The vLLM path uses an [FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-2b/files?version=1208-fp8-static-kv8) downloaded via the NGC CLI.
+
+### Step 1: Install and Configure the NGC CLI
+
+```bash
+wget -O ngccli_arm64.zip https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/4.13.0/files/ngccli_arm64.zip
+unzip ngccli_arm64.zip && chmod u+x ngc-cli/ngc
+export PATH="$PATH:$(pwd)/ngc-cli"
+ngc config set
+```
+
+You will need an [NGC account](https://ngc.nvidia.com/) with access to the `nim` org and a valid API key.
+
+### Step 2: Download the FP8 Model
+
+```bash
+ngc registry model download-version "nim/nvidia/cosmos-reason2-2b:1208-fp8-static-kv8"
+MODEL_PATH="$(pwd)/cosmos-reason2-2b_v1208-fp8-static-kv8"
+```
+
+### Step 3: Serve
+
+<div class="device-tabs">
+<div class="device-tab-bar">
+<button class="device-tab active" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="thor">Jetson Thor</button>
+</div>
+<div class="device-panel" data-panel="orin">
+
+```bash
+sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
+  vllm serve /models/cosmos-reason2-2b \
+    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}'
+```
+
+</div>
+<div class="device-panel" data-panel="thor" style="display:none">
+
+```bash
+sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor \
+  vllm serve /models/cosmos-reason2-2b \
+    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}'
+```
+
+</div>
+</div>
+
+## Running with llama.cpp (Recommended for Orin Nano)
+
+<div class="device-tabs">
+<div class="device-tab-bar">
+<button class="device-tab active" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="thor">Jetson Thor</button>
+</div>
+<div class="device-panel" data-panel="orin">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192
+```
+
+</div>
+<div class="device-panel" data-panel="thor" style="display:none">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-2B-GGUF:Q8_0 -c 8192
+```
+
+</div>
+</div>
+
+## Cosmos Reason 2 Family
+
+| Model | Parameters | Memory | Best For |
+|---|---|---|---|
+| **Cosmos Reason 2 2B** | 2B | 8GB RAM | Lightweight edge deployment |
+| [Cosmos Reason 2 8B](/models/cosmos-reason2-8b) | 8B | 18GB RAM | Higher accuracy, demanding tasks |
+
+## Additional Resources
+
+- [NGC FP8 Checkpoint](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-2b/files?version=1208-fp8-static-kv8) - FP8 quantized model for vLLM
+- [Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui) - real-time webcam-to-VLM interface

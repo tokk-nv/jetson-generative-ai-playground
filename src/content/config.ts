@@ -25,6 +25,7 @@ const models = defineCollection({
     family: z.string().optional(), // Grouping for index
     icon: z.string().optional(), // Emoji or icon
     is_new: z.boolean().optional(),
+    hide_run_button: z.boolean().optional(),
     order: z.number().optional(), // For ordering within family (smaller = first)
     type: z.string().optional(), // e.g. "Multimodal", "Text"
     hf_checkpoint: z.string().optional(),
