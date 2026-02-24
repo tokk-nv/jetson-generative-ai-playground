@@ -7,8 +7,7 @@
     { "id": "orin_nano_8gb", "name": "Orin Nano 8GB", "fullName": "Jetson Orin Nano 8GB", "generation": "Orin" }
   ],
   "notes": [
-    "Unless otherwise specified, all models utilize W4A16 quantization for Orin and NVFP4 for Thor.",
-    "CR models are in NVFP4 for Thor and FP8 for Orin."
+    "Unless otherwise specified, all models utilize W4A16 quantization for Orin and NVFP4 for Thor."
   ],
   "models": [
     {
