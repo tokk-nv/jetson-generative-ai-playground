@@ -393,6 +393,40 @@ const { title, description = "Experience the latest generative AI models optimiz
           }
         }
 
+        function applyHfToken(cmd, st) {
+          if (!cmd || !st.hfToken) return cmd;
+          cmd = cmd.replace(/\\\$HF_TOKEN/g, st.hfToken);
+          cmd = cmd.replace(/\$\{HF_TOKEN\}/g, st.hfToken);
+          cmd = cmd.replace(/\$HF_TOKEN/g, st.hfToken);
+          return cmd;
+        }
+
+        function applyVllmOverrides(cmd, st) {
+          if (!cmd || !cmd.includes('vllm serve')) return cmd;
+          var flags = [
+            { key: 'vllmPort', flag: '--port', defaultVal: null },
+            { key: 'vllmMaxModelLen', flag: '--max-model-len', defaultVal: null },
+            { key: 'vllmGpuMem', flag: '--gpu-memory-utilization', defaultVal: '0.8' }
+          ];
+          for (var i = 0; i < flags.length; i++) {
+            var val = st[flags[i].key] || flags[i].defaultVal;
+            if (!val) continue;
+            var flag = flags[i].flag;
+            var regex = new RegExp(flag.replace(/[-]/g, '[-]') + '\\s+\\S+');
+            if (regex.test(cmd)) {
+              if (!cmd.match(new RegExp(flag.replace(/[-]/g, '[-]') + '\\s+\\$'))) {
+                cmd = cmd.replace(regex, flag + ' ' + val);
+              }
+            } else {
+              var serveIdx = cmd.indexOf('vllm serve');
+              var afterServe = cmd.indexOf(' ', serveIdx + 'vllm serve '.length);
+              if (afterServe === -1) afterServe = cmd.length;
+              cmd = cmd.slice(0, afterServe) + ' ' + flag + ' ' + val + cmd.slice(afterServe);
+            }
+          }
+          return cmd;
+        }
+
         function buildShell(meta, st) {
           var engineLower = (st.engine || '').toLowerCase();
 
@@ -401,7 +435,6 @@ const { title, description = "Experience the latest generative AI models optimiz
             var customEngine = meta.supportedEngines.find(function(e) {
               if (!e.engine) return false;
               var engineName = e.engine.toLowerCase();
-              // Match by exact name or by removing dots/special chars (llama.cpp -> llamacpp)
               var normalizedName = engineName.replace(/[.\-_]/g, '');
               var normalizedEngineLower = engineLower.replace(/[.\-_]/g, '');
               return engineName === engineLower || normalizedName === normalizedEngineLower;
@@ -417,6 +450,10 @@ const { title, description = "Experience the latest generative AI models optimiz
                 customCmd = customEngine.run_command;
               }
               if (customCmd) {
+                if (engineLower === 'vllm') {
+                  customCmd = applyVllmOverrides(customCmd, st);
+                }
+                customCmd = applyHfToken(customCmd, st);
                 return customCmd;
               }
             }
@@ -501,6 +538,7 @@ const { title, description = "Experience the latest generative AI models optimiz
           var vllmPortEl = qs(modal, '[data-vllm-port]');
           var vllmMaxModelLenEl = qs(modal, '[data-vllm-max-model-len]');
           var vllmGpuMemEl = qs(modal, '[data-vllm-gpu-mem]');
+          var hfTokenEl = qs(modal, '[data-hf-token]');
 
           return {
             engine: engineVal,
@@ -511,23 +549,37 @@ const { title, description = "Experience the latest generative AI models optimiz
             ctx: Number(qs(modal, '[data-ctx]') ? qs(modal, '[data-ctx]').value : 4096),
             steps: Number(qs(modal, '[data-steps]') ? qs(modal, '[data-steps]').value : 25),
             tab: modal.getAttribute('data-tab') || 'shell',
-            // vLLM parameters - only include if user entered a value
             vllmPort: vllmPortEl && vllmPortEl.value ? vllmPortEl.value : '',
             vllmMaxModelLen: vllmMaxModelLenEl && vllmMaxModelLenEl.value ? vllmMaxModelLenEl.value : '',
-            vllmGpuMem: vllmGpuMemEl && vllmGpuMemEl.value ? vllmGpuMemEl.value : ''
+            vllmGpuMem: vllmGpuMemEl && vllmGpuMemEl.value ? vllmGpuMemEl.value : '',
+            hfToken: hfTokenEl && hfTokenEl.value ? hfTokenEl.value.trim() : ''
           };
         }
 
         function updateVllmConfigVisibility(modal) {
           var engineSel = qs(modal, '[data-engine]');
           var vllmConfig = qs(modal, '[data-vllm-config]');
-          if (!vllmConfig) return;
+          var hfSection = qs(modal, '[data-hf-token-section]');
+          var metaStr = modal.getAttribute('data-meta') || '{}';
+          var meta = JSON.parse(metaStr);
 
           var engineVal = engineSel ? engineSel.value.toLowerCase() : '';
-          if (engineVal === 'vllm') {
-            vllmConfig.classList.remove('hidden');
-          } else {
-            vllmConfig.classList.add('hidden');
+          if (vllmConfig) {
+            if (engineVal === 'vllm') {
+              vllmConfig.classList.remove('hidden');
+            } else {
+              vllmConfig.classList.add('hidden');
+            }
+          }
+
+          if (hfSection) {
+            var deviceSel = qs(modal, '[data-device]');
+            var deviceVal = deviceSel ? deviceSel.value : '';
+            if (meta.needsHfToken && deviceVal === 'Jetson Thor') {
+              hfSection.classList.remove('hidden');
+            } else {
+              hfSection.classList.add('hidden');
+            }
           }
         }
 
@@ -690,8 +742,7 @@ const { title, description = "Experience the latest generative AI models optimiz
         document.addEventListener('change', function (e) {
           var modal = e.target.closest('[data-run-modal]');
           if (modal) {
-            // Check if engine dropdown changed
-            if (e.target.matches('[data-engine]')) {
+            if (e.target.matches('[data-engine]') || e.target.matches('[data-device]')) {
               updateVllmConfigVisibility(modal);
             }
             render(modal);
