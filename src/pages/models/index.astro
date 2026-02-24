@@ -28,7 +28,17 @@ const collectionModels = modelEntries.map(entry => {
 // Models come from content collection only, sorted by order within family
 const models = collectionModels.sort((a, b) => a.order - b.order);
 
-const families = Array.from(new Set(models.map(m => m.family)));
+const familyOrder: Record<string, number> = {
+  'Google Gemma3': 0,
+  'NVIDIA Nemotron': 1,
+  'NVIDIA Cosmos Reason': 2,
+  'OpenAI GPT OSS': 3,
+  'Qwen Qwen3': 4,
+  'Mistral AI Ministral 3': 5,
+  'Meta Llama 3': 6,
+};
+const families = Array.from(new Set(models.map(m => m.family)))
+  .sort((a, b) => (familyOrder[a] ?? 99) - (familyOrder[b] ?? 99));
 ---
 
 <Layout title="Models" description="Discover all generative AI models optimized for Jetson">
@@ -124,7 +134,7 @@ const families = Array.from(new Set(models.map(m => m.family)));
                 <div class="model-card p-3 rounded-lg border border-transparent hover:border-nvidia-green hover:bg-nvidia-gray-50 transition-all group" data-category={model.category} data-name={model.name.toLowerCase()}>
                   <div class="flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2 min-w-0">
-                      <span class="text-sm font-bold text-nvidia-black whitespace-nowrap group-hover:text-nvidia-green transition-colors">{model.name}</span>
+                      <span class="text-sm font-bold text-nvidia-black group-hover:text-nvidia-green transition-colors">{model.name}</span>
                       {model.status === 'new' && (
                         <span class="bg-nvidia-green text-nvidia-black px-1.5 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wide shrink-0">New</span>
                       )}
