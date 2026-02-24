@@ -20,39 +20,46 @@
     "order": 3,
     "description": "Vision-language models for multimodal reasoning on Jetson"
   },
+  "VLA": {
+    "title": "VLA",
+    "icon": "🤖",
+    "colorClass": "bg-teal-100 text-teal-600",
+    "order": 4,
+    "description": "Vision-language-action models for robotic control on Jetson"
+  },
   "Applications": {
     "title": "Applications",
     "icon": "🧩",
     "colorClass": "bg-purple-100 text-purple-600",
-    "order": 4,
+    "order": 5,
     "description": "End-to-end AI applications and microservices"
   },
   "Workshops": {
     "title": "Workshops & Labs",
     "icon": "🎓",
     "colorClass": "bg-nvidia-green/10 text-nvidia-green",
-    "order": 5,
+    "order": 6,
     "description": "Hands-on workshops and guided labs"
   },
   "Text": {
     "title": "Text Generation (LLM)",
     "icon": "💬",
     "colorClass": "bg-blue-100 text-blue-600",
-    "order": 6,
+    "order": 7,
     "description": "Large language models and text generation"
   },
   "Image": {
     "title": "Image Generation",
     "icon": "🎨",
     "colorClass": "bg-pink-100 text-pink-600",
-    "order": 7,
+    "order": 8,
     "description": "Image generation and diffusion models"
   },
   "Audio": {
     "title": "Audio & Speech",
     "icon": "🎤",
     "colorClass": "bg-orange-100 text-orange-600",
-    "order": 8,
+    "order": 9,
     "description": "Speech recognition and audio processing"
   }
 }

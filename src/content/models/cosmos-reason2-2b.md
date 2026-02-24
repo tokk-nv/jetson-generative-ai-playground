@@ -72,7 +72,7 @@ MODEL_PATH="$(pwd)/cosmos-reason2-2b_v1208-fp8-static-kv8"
 <div class="device-tabs">
 <div class="device-tab-bar">
 <button class="device-tab active" data-target="thor">Jetson Thor</button>
-<button class="device-tab" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="orin">AGX Orin</button>
 <button class="device-tab" data-target="nano">Orin Nano</button>
 </div>
 <div class="device-panel" data-panel="thor">
@@ -131,7 +131,7 @@ You may also need to reduce the image resolution in `preprocessor_config.json` â
 <div class="device-tabs">
 <div class="device-tab-bar">
 <button class="device-tab active" data-target="thor">Jetson Thor</button>
-<button class="device-tab" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="orin">AGX Orin</button>
 <button class="device-tab" data-target="nano">Orin Nano</button>
 </div>
 <div class="device-panel" data-panel="thor">
