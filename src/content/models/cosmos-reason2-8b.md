@@ -63,7 +63,7 @@ MODEL_PATH="$(pwd)/cosmos-reason2-8b_v1208-fp8-static-kv8"
 <div class="device-tabs">
 <div class="device-tab-bar">
 <button class="device-tab active" data-target="thor">Jetson Thor</button>
-<button class="device-tab" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="orin">AGX Orin</button>
 </div>
 <div class="device-panel" data-panel="thor">
 
@@ -100,7 +100,7 @@ sudo docker run -it --rm --runtime=nvidia --network host \
 <div class="device-tabs">
 <div class="device-tab-bar">
 <button class="device-tab active" data-target="thor">Jetson Thor</button>
-<button class="device-tab" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="orin">AGX Orin</button>
 </div>
 <div class="device-panel" data-panel="thor">
 
