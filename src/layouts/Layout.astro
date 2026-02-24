@@ -454,6 +454,18 @@ const { title, description = "Experience the latest generative AI models optimiz
                   customCmd = applyVllmOverrides(customCmd, st);
                 }
                 customCmd = applyHfToken(customCmd, st);
+                var installCmd = null;
+                var device = st.device || 'Jetson Orin';
+                if (device === 'Jetson Thor' && customEngine.install_command_thor) {
+                  installCmd = customEngine.install_command_thor;
+                } else if (device === 'Jetson Orin' && customEngine.install_command_orin) {
+                  installCmd = customEngine.install_command_orin;
+                } else if (customEngine.install_command) {
+                  installCmd = customEngine.install_command;
+                }
+                if (installCmd) {
+                  return '# Setup\n' + installCmd + '\n\n# Run\n' + customCmd;
+                }
                 return customCmd;
               }
             }
