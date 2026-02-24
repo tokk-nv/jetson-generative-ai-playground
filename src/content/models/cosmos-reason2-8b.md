@@ -12,17 +12,18 @@ precision: "FP8"
 model_size: "10GB"
 hf_checkpoint: "nvidia/Cosmos-Reason2-8B"
 huggingface_url: "https://huggingface.co/nvidia/Cosmos-Reason2-8B"
-minimum_jetson: "AGX Orin"
+minimum_jetson: "Orin Nano"
+hide_run_button: true
 supported_inference_engines:
-  - engine: "llama.cpp"
-    type: "Container"
-    run_command_orin: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q8_0"
-    run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q8_0"
   - engine: "vLLM"
     type: "Container"
     install_command: "ngc registry model download-version \"nim/nvidia/cosmos-reason2-8b:1208-fp8-static-kv8\""
-    run_command_orin: "sudo docker run -it --rm --runtime=nvidia --network host --shm-size=8g --ulimit memlock=-1 --ulimit stack=67108864 -v $MODEL_PATH:/models/cosmos-reason2-8b:ro ghcr.io/nvidia-ai-iot/vllm:r36.4-tegra-aarch64-cu126-22.04 bash -c 'cd /opt && source venv/bin/activate && vllm serve /models/cosmos-reason2-8b --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3'"
-    run_command_thor: "sudo docker run -it --rm --runtime=nvidia --network host --ipc host -v $MODEL_PATH:/models/cosmos-reason2-8b:ro nvcr.io/nvidia/vllm:26.01-py3 vllm serve /models/cosmos-reason2-8b --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3"
+    run_command_orin: "sudo docker run -it --rm --runtime=nvidia --network host -v $MODEL_PATH:/models/cosmos-reason2-8b:ro ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin vllm serve /models/cosmos-reason2-8b --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 --media-io-kwargs '{\"video\": {\"num_frames\": -1}}'"
+    run_command_thor: "sudo docker run -it --rm --runtime=nvidia --network host -v $MODEL_PATH:/models/cosmos-reason2-8b:ro ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor vllm serve /models/cosmos-reason2-8b --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 --media-io-kwargs '{\"video\": {\"num_frames\": -1}}'"
+  - engine: "llama.cpp"
+    type: "Container"
+    run_command_orin: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192"
+    run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192"
 ---
 
 [NVIDIA Cosmos Reason 2 8B](https://huggingface.co/nvidia/Cosmos-Reason2-8B) is the larger variant in the Cosmos Reason 2 family, offering enhanced reasoning performance with 8 billion parameters. It provides stronger chain-of-thought reasoning capabilities compared to the 2B variant, suitable for more demanding vision-language tasks on Jetson.
@@ -34,19 +35,6 @@ supported_inference_engines:
 - **Anomaly Detection**: Identifies unusual patterns and anomalies in visual data
 - **Scene Analysis**: Comprehensive and detailed analysis of complex visual scenes
 - **Video Understanding**: Supports video frame analysis for temporal reasoning
-
-## Running with llama.cpp
-
-GGUF models are downloaded automatically:
-
-```bash
-sudo docker run -it --rm --pull always --runtime=nvidia --network host \
-  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
-  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
-  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q8_0
-```
-
-Available quantizations: Q8_0 (8.2 GB, best quality), Q4_K_M (4.7 GB, smaller footprint), F16 (16 GB, full precision). The built-in web UI is at `http://localhost:8080` with an OpenAI-compatible API on the same port.
 
 ## Running with vLLM (AGX Orin / Thor)
 
@@ -61,6 +49,8 @@ export PATH="$PATH:$(pwd)/ngc-cli"
 ngc config set
 ```
 
+You will need an [NGC account](https://ngc.nvidia.com/) with access to the `nim` org and a valid API key.
+
 ### Step 2: Download the FP8 Model
 
 ```bash
@@ -70,27 +60,78 @@ MODEL_PATH="$(pwd)/cosmos-reason2-8b_v1208-fp8-static-kv8"
 
 ### Step 3: Serve
 
+<div class="device-tabs">
+<div class="device-tab-bar">
+<button class="device-tab active" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="thor">Jetson Thor</button>
+</div>
+<div class="device-panel" data-panel="orin">
+
 ```bash
 sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-8b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
+  vllm serve /models/cosmos-reason2-8b \
+    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}'
 ```
 
-| | Jetson AGX Thor | Jetson AGX Orin (64GB) |
-|---|---|---|
-| **vLLM Container** | `nvcr.io/nvidia/vllm:26.01-py3` | `ghcr.io/nvidia-ai-iot/vllm:r36.4-tegra-aarch64-cu126-22.04` |
-| **Max Model Length** | 8192 tokens | 8192 tokens |
-| **GPU Memory Util** | 0.8 | 0.8 |
+</div>
+<div class="device-panel" data-panel="thor" style="display:none">
 
-> **Note:** Due to the 8B model size, this model requires at least Jetson AGX Orin with 64GB or Jetson AGX Thor.
+```bash
+sudo sysctl -w vm.drop_caches=3
+
+sudo docker run -it --rm --runtime=nvidia --network host \
+  -v $MODEL_PATH:/models/cosmos-reason2-8b:ro \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor \
+  vllm serve /models/cosmos-reason2-8b \
+    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}'
+```
+
+</div>
+</div>
+
+## Running with llama.cpp (Recommended for Orin Nano)
+
+<div class="device-tabs">
+<div class="device-tab-bar">
+<button class="device-tab active" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="thor">Jetson Thor</button>
+</div>
+<div class="device-panel" data-panel="orin">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192
+```
+
+</div>
+<div class="device-panel" data-panel="thor" style="display:none">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192
+```
+
+</div>
+</div>
 
 ## Cosmos Reason 2 Family
 
 | Model | Parameters | Memory | Best For |
 |---|---|---|---|
-| [Cosmos Reason 2 2B](/models/cosmos-reason2-2b) | 2B | 8GB RAM | Edge deployment, Orin Nano |
-| **Cosmos Reason 2 8B** | 8B | 18GB RAM | Higher accuracy, AGX Orin / Thor |
+| [Cosmos Reason 2 2B](/models/cosmos-reason2-2b) | 2B | 8GB RAM | Lightweight edge deployment |
+| **Cosmos Reason 2 8B** | 8B | 18GB RAM | Higher accuracy, demanding tasks |
 
 ## Additional Resources
 
-- [GGUF Quantizations](https://huggingface.co/Kbenkhaled/Cosmos-Reason2-8B-GGUF) - Q8_0, Q4_K_M, and F16 for llama.cpp
 - [NGC FP8 Checkpoint](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-8b?version=1208-fp8-static-kv8) - FP8 quantized model for vLLM
 - [Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui) - real-time webcam-to-VLM interface
