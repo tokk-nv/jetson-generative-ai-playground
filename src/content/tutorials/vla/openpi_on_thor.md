@@ -10,13 +10,19 @@ isNew: true
 
 Deploy [Physical Intelligence's](https://www.physicalintelligence.company/) OpenPi **π₀.₅ Vision-Language-Action (VLA)** model on **NVIDIA Jetson AGX Thor** with TensorRT NVFP4 quantization for low-latency end-to-end inference.
 
-![π₀.₅ E2E Pipeline Latency on Jetson AGX Thor](/images/tutorials/pi05-thor-perf.png)
 
 ## What is OpenPi π₀.₅?
 
 [OpenPi](https://github.com/Physical-Intelligence/openpi) is Physical Intelligence's open-source robotics model repository. The **π₀.₅** model is a flow-matching Vision-Language-Action (VLA) model pre-trained on 10,000+ hours of robot data. It takes camera images and a natural-language instruction as input and outputs robot actions — enabling language-conditioned robotic manipulation.
 
-**Why Jetson AGX Thor?** Thor's Blackwell GPU with unified memory and TensorRT support makes it ideal for deploying VLA models at the edge, directly on the robot, without a separate GPU server.
+![OpenPi Image](/images/tutorials/pi_05.png)
+
+
+## Why Jetson AGX Thor? 
+
+VLA models are computationally demanding,  they fuse vision encoders, language models  and action decoders into a single pipeline that must run at real-time control rates. Jetson AGX Thor brings Blackwell-class GPU compute with up to 128GB of unified memory, giving it the headroom to run these large multimodal models entirely on-device. Combined with TensorRT acceleration and FP8/NVFP4 precision support, Thor can deliver the throughput needed for closed-loop robotic control without relying on a separate GPU server.
+
+![π₀.₅ E2E Pipeline Latency on Jetson AGX Thor](/images/tutorials/pi05-thor-perf.png)
 
 ## Pipeline Overview
 
@@ -39,7 +45,7 @@ Benchmarked on Jetson AGX Thor Developer Kit (JetPack 7.x, MAXN power mode):
 |---|---|---|---|
 | PyTorch BF16 | ~163 | ~158 | 1.0x |
 | TensorRT FP8 | ~95 | ~91 | 1.71x |
-| **TensorRT NVFP4** | **~94** | **~90** | **1.73x** |
+| **TensorRT FP8 + NVFP4** | **~94** | **~90** | **1.73x** |
 
 ## Prerequisites
 
@@ -66,7 +72,7 @@ Benchmarked on Jetson AGX Thor Developer Kit (JetPack 7.x, MAXN power mode):
 > ```
 
 
-## Step 1 — Set Jetson to Maximum Performance
+## Step 1: Set Jetson to Maximum Performance
 
 Boost all clocks and disable GPU power gating for consistent benchmark results.
 
@@ -88,7 +94,7 @@ sudo jetson_clocks --show
 ```
 
 
-## Step 2 — Clone the OpenPi Repository
+## Step 2: Clone the OpenPi Repository
 
 The deployment scripts in this tutorial were tested against a specific commit of the OpenPi repo. Pin to that commit for reproducibility:
 
@@ -101,7 +107,7 @@ git checkout 175f89c3
 > **Tip:** You can try the latest `main` branch (`git checkout main`) if you want the newest features, but if something breaks during conversion or export, fall back to the pinned commit above.
 
 
-## Step 3 — Download Jetson Thor Deployment Scripts
+## Step 3: Download Jetson Thor Deployment Scripts
 
 The OpenPi repo does not include the Jetson Thor deployment scripts by default. Download them into the cloned repo:
 
@@ -121,7 +127,7 @@ ls openpi_on_thor/
 ```
 
 
-## Step 4 — Build the Docker Image for Jetson Thor
+## Step 4: Build the Docker Image for Jetson Thor
 
 The Dockerfile at `openpi_on_thor/thor.Dockerfile` uses the [NVIDIA PyTorch container](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) as the base and installs all dependencies from the [Jetson AI Lab pip index](https://pypi.jetson-ai-lab.io).
 
@@ -143,7 +149,7 @@ sudo docker build -t openpi-pi0.5:latest -f openpi_on_thor/thor.Dockerfile .
 </details>
 
 
-## Step 5 — Launch the Docker Container
+## Step 5: Launch the Docker Container
 
 ```bash
 sudo docker run --rm -it --runtime nvidia \
@@ -159,7 +165,7 @@ sudo docker run --rm -it --runtime nvidia \
 **You are now inside the container.** All remaining steps run inside this shell.
 
 
-## Step 6 — Configure the Environment (Inside Container)
+## Step 6: Configure the Environment (Inside Container)
 
 ### 6.1 Set PYTHONPATH
 
@@ -213,7 +219,7 @@ Applying ONNX/TRT compatibility fixes to modeling_gemma.py...
 Done.
 ```
 
-## Step 7 — Download the JAX Checkpoint
+## Step 7: Download the JAX Checkpoint
 
 The model checkpoints are stored on Google Cloud Storage and are downloaded automatically. The download includes both the model parameters and normalization assets.
 
@@ -230,7 +236,7 @@ print(f'Checkpoint downloaded to: {checkpoint_dir}')
 The checkpoint will be cached at `~/.cache/openpi/openpi-assets/checkpoints/${CONFIG_NAME}/`.
 
 
-## Step 8 — Convert JAX Checkpoint to PyTorch
+## Step 8: Convert JAX Checkpoint to PyTorch
 
 Convert the original JAX/Flax checkpoint to PyTorch SafeTensors format:
 
@@ -263,7 +269,7 @@ The output directory now contains:
 - `assets/` — normalization stats (needed for inference)
 
 
-## Step 9 — (Optional) Verify PyTorch Inference
+## Step 9: (Optional) Verify PyTorch Inference
 
 Before quantizing, confirm the PyTorch model works correctly:
 
@@ -291,7 +297,7 @@ Model inference time: 157.94 ± 0.35 ms
 ```
 
 
-## Step 10 — Export to ONNX with NVFP4 Quantization
+## Step 10: Export to ONNX with NVFP4 Quantization
 
 This step converts the PyTorch model to ONNX format with **FP8 + NVFP4** quantization using [NVIDIA ModelOpt](https://github.com/NVIDIA/TensorRT-Model-Optimizer):
 
@@ -329,7 +335,7 @@ The ONNX model is saved to:
 </details>
 
 
-## Step 11 — Build TensorRT Engine
+## Step 11: Build TensorRT Engine
 
 Compile the ONNX model into a TensorRT engine using `trtexec`:
 
@@ -351,7 +357,7 @@ TensorRT engine built successfully!
 ```
 
 
-## Step 12 — Run TensorRT NVFP4 Inference
+## Step 12: Run TensorRT NVFP4 Inference
 
 Run the optimized TensorRT engine:
 
@@ -381,7 +387,7 @@ Model inference time: 89.80 ± 0.12 ms
 
 ---
 
-## Step 13 — (Optional) Compare PyTorch vs TensorRT
+## Step 13: (Optional) Compare PyTorch vs TensorRT
 
 The inference script has a built-in comparison mode that runs **both backends** with identical inputs and reports accuracy differences:
 
@@ -402,7 +408,7 @@ This reports:
 
 ---
 
-## Step 14 — (Optional) Launch Inference Server
+## Step 14: (Optional) Launch Inference Server
 
 For production robotics deployment, launch a WebSocket policy server that robots can query over the network:
 

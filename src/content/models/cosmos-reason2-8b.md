@@ -23,6 +23,7 @@ supported_inference_engines:
   - engine: "llama.cpp"
     type: "Container"
     run_command_orin: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192"
+    run_command_nano: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192"
     run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host -v $HOME/.cache/huggingface:/root/.cache/huggingface ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-thor llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192"
 ---
 
@@ -95,12 +96,13 @@ sudo docker run -it --rm --runtime=nvidia --network host \
 </div>
 </div>
 
-## Running with llama.cpp (Alternative Option)
+## Running with llama.cpp (Recommended for Orin Nano)
 
 <div class="device-tabs">
 <div class="device-tab-bar">
 <button class="device-tab active" data-target="thor">Jetson Thor</button>
 <button class="device-tab" data-target="orin">AGX Orin</button>
+<button class="device-tab" data-target="nano">Orin Nano</button>
 </div>
 <div class="device-panel" data-panel="thor">
 
@@ -113,6 +115,16 @@ sudo docker run -it --rm --pull always --runtime=nvidia --network host \
 
 </div>
 <div class="device-panel" data-panel="orin" style="display:none">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  -v $HOME/.cache/huggingface:/root/.cache/huggingface \
+  ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-orin \
+  llama-server -hf Kbenkhaled/Cosmos-Reason2-8B-GGUF:Q4_K_M -c 8192
+```
+
+</div>
+<div class="device-panel" data-panel="nano" style="display:none">
 
 ```bash
 sudo docker run -it --rm --pull always --runtime=nvidia --network host \
