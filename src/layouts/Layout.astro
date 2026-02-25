@@ -3,9 +3,11 @@
 export interface Props {
   title: string;
   description?: string;
+  image?: string;
 }
 
-const { title, description = "Experience the latest generative AI models optimized for Jetson. Run locally, without depending on the cloud." } = Astro.props;
+const { title, description = "Experience the latest generative AI models optimized for Jetson. Run locally, without depending on the cloud.", image = "/images/hero/nvidia-logo.png" } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -15,9 +17,23 @@ const { title, description = "Experience the latest generative AI models optimiz
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <title>{title} | Jetson AI Lab</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | Jetson AI Lab`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:site_name" content="Jetson AI Lab" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | Jetson AI Lab`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SXH8S4Y8RW"></script>

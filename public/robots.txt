@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /archive/
+
+Sitemap: https://www.jetson-ai-lab.com/sitemap-index.xml
