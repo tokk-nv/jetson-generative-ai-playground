@@ -121,7 +121,7 @@ sudo docker run -it --rm --runtime=nvidia --network host \
     --limit-mm-per-prompt '{"image":1}'
 ```
 
-You may also need to reduce the image resolution in `preprocessor_config.json` — see the [full tutorial](/tutorials/cosmos-reason2-vlm/) for details.
+You may also need to reduce the image resolution in `preprocessor_config.json` — see the [full tutorial](/tutorials/cosmos-reason2-vlm#step-4-serve-cosmos-reason2-with-vllm) for details.
 
 </div>
 </div>

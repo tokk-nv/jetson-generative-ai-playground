@@ -1,10 +1,11 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 import rehypeMermaid from 'rehype-mermaid';
 
 export default defineConfig({
-  integrations: [tailwind(), mdx()],
+  integrations: [tailwind(), mdx(), sitemap()],
   site: 'https://www.jetson-ai-lab.com',
   markdown: {
     syntaxHighlight: {

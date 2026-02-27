@@ -1,6 +1,6 @@
 ---
 title: "Cosmos Reason2 Models on Jetson"
-description: "Run NVIDIA Cosmos Reason2 (2B / 8B) models on Jetson with vLLM or llama.cpp, and connect to Live VLM WebUI for real-time vision inference."
+description: "Run NVIDIA Cosmos Reason2 (2B / 8B) models on Jetson with vLLM and connect to Live VLM WebUI for real-time vision inference."
 category: "VLM"
 section: "Vision Language Models"
 order: 2
@@ -29,7 +29,7 @@ Both models are available in quantized formats (FP8 for vLLM, FP4/other GGUF var
 | **Accounts** | [NVIDIA NGC](https://ngc.nvidia.com/) (free) — for NGC CLI and model download |
 
 
-## Which Model Should I Choose?
+## Which Model Should I Choose using vLLM?
 
 | | Cosmos Reason2 2B | Cosmos Reason2 8B |
 |---|---|---|
@@ -39,9 +39,9 @@ Both models are available in quantized formats (FP8 for vLLM, FP4/other GGUF var
 | **Reasoning Strength** | Good — spatial reasoning, anomaly detection | Stronger — more detailed analysis and accuracy |
 | **Best For** | Memory-constrained deployments, fast prototyping | Higher-accuracy reasoning when memory allows |
 
-> **Orin Super Nano** supports only the **2B model** due to memory constraints.
+> **Important:** **Orin Super Nano** supports only the **2B model** when running with vLLM due to memory constraints.
 
-> **Alternative: llama.cpp** — If you prefer a lighter-weight setup (especially on Orin Nano), both models are also available as GGUF checkpoints for [llama.cpp](/models/cosmos-reason2-2b). See the individual model pages for [Cosmos Reason2 2B](/models/cosmos-reason2-2b) and [Cosmos Reason2 8B](/models/cosmos-reason2-8b).
+> **Tip:** If you prefer a lighter-weight setup (especially on Orin Nano), both models are also available as GGUF checkpoints for [llama.cpp](/models/cosmos-reason2-2b). See the individual model pages for [Cosmos Reason2 2B](/models/cosmos-reason2-2b) and [Cosmos Reason2 8B](/models/cosmos-reason2-8b).
 
 ## Overview
 
@@ -432,68 +432,23 @@ In the WebUI left sidebar, adjust these settings **before clicking Start**:
 
 ## Troubleshooting
 
-### Out of memory on Orin
+1. **Out of memory on Orin** — vLLM crashes with CUDA out-of-memory errors. Free system memory first with `sudo sysctl -w vm.drop_caches=3`, lower `--gpu-memory-utilization` (try `0.45` or `0.40`), reduce `--max-model-len` (try `128`), ensure no other GPU-intensive processes are running, or switch from the 8B to the 2B model.
 
-**Problem:** vLLM crashes with CUDA out-of-memory errors.
+2. **"max_tokens is too large" errors on Orin Super Nano** — vLLM returns `400 Bad Request` because image tokens consume most of the 768 token context window (~500-600 tokens for a single image). In the WebUI, set **Max Tokens** to **150** before starting analysis. Make sure you edited `preprocessor_config.json` to reduce `longest_edge` to `50176` (Step 4, Orin Super Nano tab).
 
-**Solution:**
-1. Free system memory before starting:
-   ```bash
-   sudo sysctl -w vm.drop_caches=3
-   ```
-2. Lower `--gpu-memory-utilization` further (try `0.45` or `0.40`)
-3. Reduce `--max-model-len` further (try `128`)
-4. Make sure no other GPU-intensive processes are running
-5. If running the 8B model, consider switching to the 2B model for lower memory usage
+3. **Model not found in WebUI** — The model doesn't appear in the Live VLM WebUI dropdown. Verify vLLM is running with `curl http://localhost:8000/v1/models`. Ensure the WebUI API Base URL is set to `http://localhost:8000/v1` (not `https`). If vLLM and WebUI are in separate containers, use `http://<jetson-ip>:8000/v1` instead of `localhost`.
 
-### "max_tokens is too large" errors on Orin Super Nano
+4. **Slow inference on Orin** — This is expected with the memory-constrained configuration. The 2B FP8 model on Orin Super Nano prioritizes fitting in memory over speed. On AGX Orin, switching from the 8B to the 2B model will improve latency. Reduce `max_tokens` in the WebUI for shorter, faster responses, or increase the frame interval so the model isn't constantly processing new frames.
 
-**Problem:** vLLM returns `400 Bad Request` with the error `max_tokens is too large` or `decoder prompt is longer than the maximum model length`.
-
-**Solution:**
-- This happens because image tokens consume most of the 768 token context window (~500-600 tokens for a single image), and the WebUI defaults to `max_tokens: 512`
-- In the WebUI, set **Max Tokens** to **150** before starting analysis
-- Make sure you edited `preprocessor_config.json` to reduce `longest_edge` to `50176` (Step 4, Orin Super Nano tab) — without this, images produce too many tokens to fit in the context
-
-### Model not found in WebUI
-
-**Problem:** The model doesn't appear in the Live VLM WebUI dropdown.
-
-**Solution:**
-1. Verify vLLM is running: `curl http://localhost:8000/v1/models`
-2. Make sure the WebUI API Base URL is set to `http://localhost:8000/v1` (not `https`)
-3. If vLLM and WebUI are in separate containers, use `http://<jetson-ip>:8000/v1` instead of `localhost`
-
-### Slow inference on Orin
-
-**Problem:** Each response takes a very long time.
-
-**Solution:**
-- This is expected with the memory-constrained configuration. The 2B FP8 model on Orin Super Nano prioritizes fitting in memory over speed.
-- On AGX Orin, switching from the 8B to the 2B model will improve latency
-- Reduce `max_tokens` in the WebUI to get shorter, faster responses
-- Increase the frame interval so the model isn't constantly processing new frames
-
-### vLLM fails to load model
-
-**Problem:** vLLM reports the model path doesn't exist or can't be loaded.
-
-**Solution:**
-- Verify the NGC download completed successfully:
-  - 2B: `ls ~/Projects/CosmosReason2/cosmos-reason2-2b_v1208-fp8-static-kv8/`
-  - 8B: `ls ~/Projects/CosmosReason2/cosmos-reason2-8b_v1208-fp8-static-kv8/`
-- Make sure the volume mount path is correct in your `docker run` command
-- Check that the model directory is mounted as read-only (`:ro`) and the path inside the container matches what you pass to `vllm serve`
+5. **vLLM fails to load model** — vLLM reports the model path doesn't exist or can't be loaded. Verify the NGC download completed successfully (e.g., `ls ~/Projects/CosmosReason2/cosmos-reason2-2b_v1208-fp8-static-kv8/`). Make sure the volume mount path is correct in your `docker run` command and the model directory is mounted as read-only (`:ro`) with the container path matching what you pass to `vllm serve`.
 
 ---
 
 ## Additional Resources
 
 - **Model Pages**: [Cosmos Reason2 2B](/models/cosmos-reason2-2b) · [Cosmos Reason2 8B](/models/cosmos-reason2-8b) · [Cosmos Reason1 7B](/models/cosmos-reason1-7b) — quick-start commands, llama.cpp support, and benchmarks
-- **Cosmos Reason2 Collection on HuggingFace**: [https://huggingface.co/collections/nvidia/cosmos-reason2-68505a885fc2bfe0c1bd8a73](https://huggingface.co/collections/nvidia/cosmos-reason2-68505a885fc2bfe0c1bd8a73)
 - **Cosmos Reason2 2B**: [https://huggingface.co/nvidia/Cosmos-Reason2-2B](https://huggingface.co/nvidia/Cosmos-Reason2-2B)
 - **Cosmos Reason2 8B**: [https://huggingface.co/nvidia/Cosmos-Reason2-8B](https://huggingface.co/nvidia/Cosmos-Reason2-8B)
 - **NGC Model Catalog**: [https://catalog.ngc.nvidia.com/](https://catalog.ngc.nvidia.com/)
 - **Live VLM WebUI**: [https://github.com/NVIDIA-AI-IOT/live-vlm-webui](https://github.com/NVIDIA-AI-IOT/live-vlm-webui)
-- **vLLM Containers for Jetson**: [Supported Models](/models)
-- **NGC CLI Installers**: [https://org.ngc.nvidia.com/setup/installers/cli](https://org.ngc.nvidia.com/setup/installers/cli)
+
