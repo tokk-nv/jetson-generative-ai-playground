@@ -5,7 +5,7 @@ short_description: "NVIDIA's compact 2B parameter vision-language model with bui
 family: "NVIDIA Cosmos Reason"
 icon: "🧠"
 is_new: true
-order: 2
+order: 3
 type: "Multimodal"
 memory_requirements: "8GB RAM"
 precision: "FP8"

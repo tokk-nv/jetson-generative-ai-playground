@@ -1,0 +1,100 @@
+---
+title: "Qwen3.5 27B"
+model_id: "qwen3-5-27b"
+short_description: "Alibaba's dense 27 billion parameter language model with native tool calling and MTP speculative decoding"
+family: "Qwen Qwen3.5"
+icon: "🔮"
+is_new: true
+order: 2
+type: "Text"
+memory_requirements: "18GB RAM"
+precision: "NVFP4 / W4A16"
+model_size: "15GB"
+hf_checkpoint: "Qwen/Qwen3.5-27B"
+huggingface_url: "https://huggingface.co/Qwen/Qwen3.5-27B"
+minimum_jetson: "Orin AGX"
+supported_inference_engines:
+  - engine: "vLLM"
+    type: "Container"
+    run_command_orin: "sudo docker run -it --rm --pull always --runtime=nvidia --network host ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin vllm serve Kbenkhaled/Qwen3.5-27B-quantized.w4a16 --gpu-memory-utilization 0.8 --enable-prefix-caching --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder"
+    run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor vllm serve Kbenkhaled/Qwen3.5-27B-NVFP4 --gpu-memory-utilization 0.8 --enable-prefix-caching --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder"
+benchmark:
+  orin:
+    concurrency1: 9
+    concurrency8: 41
+    ttftMs: 0
+  thor:
+    concurrency1: 14
+    concurrency8: 77
+    ttftMs: 0
+---
+
+Qwen3.5 27B is a dense language model from Alibaba Cloud's Qwen3.5 family. With 27 billion parameters, it delivers strong performance across complex reasoning, coding, and language understanding tasks.
+
+## Inputs and Outputs
+
+**Input:** Text
+
+**Output:** Text
+
+## Intended Use Cases
+
+- **Reasoning**: Advanced logical and analytical reasoning with chain-of-thought
+- **Function Calling**: Native support for tool use and function calling
+- **Multilingual Instruction Following**: Following instructions across 100+ languages
+- **Code Generation**: Programming assistance in multiple languages
+- **Translation**: High-quality translation between supported languages
+
+## Running with vLLM
+
+<div class="device-tabs">
+<div class="device-tab-bar">
+<button class="device-tab active" data-target="orin">Jetson Orin</button>
+<button class="device-tab" data-target="thor">Jetson Thor</button>
+</div>
+<div class="device-panel" data-panel="orin">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin \
+  vllm serve Kbenkhaled/Qwen3.5-27B-quantized.w4a16 \
+    --gpu-memory-utilization 0.8 --enable-prefix-caching \
+    --reasoning-parser qwen3 \
+    --enable-auto-tool-choice --tool-call-parser qwen3_coder
+```
+
+</div>
+<div class="device-panel" data-panel="thor" style="display:none">
+
+```bash
+sudo docker run -it --rm --pull always --runtime=nvidia --network host \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor \
+  vllm serve Kbenkhaled/Qwen3.5-27B-NVFP4 \
+    --gpu-memory-utilization 0.8 --enable-prefix-caching \
+    --reasoning-parser qwen3 \
+    --enable-auto-tool-choice --tool-call-parser qwen3_coder
+```
+
+</div>
+</div>
+
+## Speculative Decoding with MTP
+
+This model supports **Multi-Token Prediction (MTP)** speculative decoding, which can significantly improve generation throughput. To enable it, add the following flag to your `vllm serve` command:
+
+```bash
+--speculative-config '{"method": "mtp", "num_speculative_tokens": 4}'
+```
+
+## Qwen3.5 Family
+
+| Model | Parameters | Active Params | Type | Best For |
+|---|---|---|---|---|
+| [Qwen3.5 35B-A3B](/models/qwen3-5-35b-a3b) | 35B | 3B | MoE | Efficient high-performance inference |
+| **Qwen3.5 27B** | 27B | 27B | Dense | Maximum accuracy on demanding tasks |
+
+## Additional Resources
+
+- [Hugging Face Model](https://huggingface.co/Qwen/Qwen3.5-27B) - Original model weights
+- [NVFP4 Checkpoint (Thor)](https://huggingface.co/Kbenkhaled/Qwen3.5-27B-NVFP4) - Quantized for Jetson Thor
+- [W4A16 Checkpoint (Orin)](https://huggingface.co/Kbenkhaled/Qwen3.5-27B-quantized.w4a16) - Quantized for Jetson Orin

@@ -5,7 +5,7 @@ short_description: "NVIDIA's 8B parameter vision-language model with advanced ch
 family: "NVIDIA Cosmos Reason"
 icon: "🧠"
 is_new: true
-order: 3
+order: 4
 type: "Multimodal"
 memory_requirements: "18GB RAM"
 precision: "FP8"
