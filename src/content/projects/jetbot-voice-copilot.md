@@ -7,7 +7,8 @@ source: "GitHub"
 link: "https://github.com/Jen-Hung-Ho/ros2_jetbot_tools"
 video: "https://www.youtube.com/embed/SynIj1pxzdQ"
 featured: false
-tags: ["jetbot", "ros2", "riva", "nano-llm", "voice-control", "robotics"]
+jetson: ["Jetson Orin Nano"]
+tags: ["LLM", "Robotics", "Speech", "ROS2"]
 ---
 
 Jen Hung Ho created ROS2 nodes for ASR/TTS and LLM/VLM on Jetson that can be used to control JetBot, including customizable voice commands and the execution of advanced actions.

@@ -7,7 +7,8 @@ source: "NVIDIA"
 link: "https://youtu.be/6mCFzDatGGc"
 video: "https://www.youtube.com/embed/6mCFzDatGGc"
 featured: false
-tags: ["webinar", "llm", "vlm", "vit", "vector-database", "nvidia"]
+jetson: ["Jetson AGX Orin", "Jetson Orin Nano"]
+tags: ["LLM", "VLM", "RAG"]
 ---
 
 Watch this webinar about deploying LLMs, VLMs, ViTs, and vector databases onboard Jetson Orin for building next-generation applications using Generative AI.

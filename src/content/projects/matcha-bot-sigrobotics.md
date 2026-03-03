@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/sigrobotics/matcha-bot-sigrobotics-embodied-ai-hackathon-1st-place-f0e520"
 image: "/images/projects/matcha-bot.png"
 featured: true
-tags: ["groot", "jetson-thor", "robotics", "hackathon", "vla", "embodied-ai", "lerobot"]
+jetson: ["Jetson Thor"]
+tags: ["VLA", "Robotics", "Hackathon"]
 ---
 
 🏆 **1st Place Winner** at the Embodied AI Hackathon!

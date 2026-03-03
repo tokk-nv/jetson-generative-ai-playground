@@ -7,7 +7,8 @@ source: "JetsonHacks"
 link: "https://jetsonhacks.com/2023/09/04/use-these-jetson-docker-containers-tutorial/"
 video: "https://www.youtube.com/embed/HlH3QkS1F5Y"
 featured: false
-tags: ["docker", "containers", "tutorial", "text-generation", "stable-diffusion"]
+jetson: ["Jetson AGX Orin", "Jetson Orin Nano"]
+tags: ["LLM", "Docker", "Image Generation"]
 ---
 
 JetsonHacks has an in-depth tutorial on how to use `jetson-containers` and even shows `text-generation-webui` and `stable-diffusion-webui` containers in action!

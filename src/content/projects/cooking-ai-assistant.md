@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/dhq/cooking-meals-with-a-local-ai-assistant-on-jetson-axg-orin-2fcb98"
 video: "https://player.vimeo.com/video/928227995?h=28825b3214"
 featured: false
-tags: ["cooking", "multimodal", "multi-agent", "speech", "agx-orin"]
+jetson: ["Jetson AGX Orin"]
+tags: ["VLM", "Speech", "Agentic AI"]
 ---
 
 Dimiter Kendri builds a multimodal, multi AI agent, fully local, conversational chatbot with multi agent research capabilities via speech queries.

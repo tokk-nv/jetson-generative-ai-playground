@@ -66,13 +66,14 @@ const projects = defineCollection({
     title: z.string(),
     description: z.string(),
     author: z.string(),
-    date: z.string(), // e.g. "2024-04-26"
+    date: z.string(),
     source: z.enum(['GitHub', 'Hackster', 'YouTube', 'NVIDIA', 'JetsonHacks', 'Medium', 'Seeed', 'Other']),
     link: z.string().url(),
-    image: z.string().optional(), // URL to thumbnail/preview image
-    video: z.string().optional(), // YouTube embed URL or video URL
+    image: z.string().optional(),
+    video: z.string().optional(),
     featured: z.boolean().optional(),
     tags: z.array(z.string()).optional(),
+    jetson: z.array(z.enum(['Jetson Thor', 'Jetson AGX Orin', 'Jetson Orin Nano'])).optional(),
   }),
 });
 

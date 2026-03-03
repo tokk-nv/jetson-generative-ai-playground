@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/shahizat/ai-powered-photorealistic-talking-avatar-abac41"
 video: "https://www.youtube.com/embed/-jgnzSlneAU"
 featured: false
-tags: ["avatar", "omniverse", "unreal-engine", "audio2face", "llm"]
+jetson: ["Jetson AGX Orin"]
+tags: ["LLM", "Speech", "Image Generation"]
 ---
 
 Nurgaliyev Shakhizat creates an interactive talking avatar using ASR, TTS, LLM, and Audio2Face with NVIDIA Omniverse and Unreal Engine.

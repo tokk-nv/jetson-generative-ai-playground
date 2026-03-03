@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/shahizat/build-local-ai-rag-agent-with-n8n-on-nvidia-jetson-agx-orin-665914"
 image: "https://hackster.imgix.net/uploads/attachments/1872883/_kR3My3eE2X.blob?auto=compress%2Cformat&w=900&h=675&fit=min"
 featured: true
-tags: ["rag", "llm", "n8n", "workflow-automation", "qwen", "telegram", "agx-orin"]
+jetson: ["Jetson AGX Orin"]
+tags: ["LLM", "RAG", "Agentic AI"]
 ---
 
 Nurgaliyev Shakhizat demonstrates how to build a fully local Retrieval-Augmented Generation (RAG) AI agent on the NVIDIA Jetson AGX Orin Developer Kit using n8n workflow automation platform.

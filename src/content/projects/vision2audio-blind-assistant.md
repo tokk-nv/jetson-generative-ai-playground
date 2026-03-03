@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/shahizat/ai-powered-application-for-the-blind-and-visually-impaired-df3f9e"
 image: "https://hackster.imgix.net/uploads/attachments/1683310/_KUakkgQR2i.blob?auto=compress%2Cformat&w=640&fit=min"
 featured: true
-tags: ["accessibility", "vlm", "llava", "tts", "agx-orin"]
+jetson: ["Jetson AGX Orin"]
+tags: ["VLM", "Speech", "IoT"]
 ---
 
 Nurgaliyev Shakhizat demonstrates a locally-hosted Blind Assistant Device running on Jetson AGX Orin 64GB Developer Kit for realtime image-to-speech translation.
