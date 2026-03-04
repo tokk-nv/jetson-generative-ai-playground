@@ -3,8 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const allProjects = await getCollection('projects');
-// Sort by date (newest first)
 allProjects.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const allSources = [...new Set(allProjects.map(p => p.data.source))].sort();
+const jetsonOrder = ['Jetson Thor', 'Jetson AGX Orin', 'Jetson Orin Nano'];
+const allJetsons = jetsonOrder.filter(j => allProjects.some(p => (p.data.jetson || []).includes(j)));
+const allTags = [...new Set(allProjects.flatMap(p => p.data.tags || []))].sort();
 
 const sourceColors: Record<string, { bg: string; text: string }> = {
   'GitHub': { bg: 'bg-gray-800', text: 'text-white' },
@@ -47,14 +51,93 @@ const sourceColors: Record<string, { bg: string; text: string }> = {
     </div>
   </section>
 
-  <!-- Projects Grid -->
-  <section class="py-20 bg-nvidia-white">
+  <!-- Sidebar + Projects Grid -->
+  <section class="py-12 bg-nvidia-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="flex flex-col lg:flex-row gap-8">
+
+        <!-- Sidebar Filters -->
+        <aside class="lg:w-64 flex-shrink-0">
+          <div class="lg:sticky lg:top-24 space-y-1">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold text-nvidia-black">Filters</h2>
+              <button id="filter-reset" class="text-xs text-nvidia-green hover:underline hidden">Clear all</button>
+            </div>
+            <span id="filter-count" class="block text-sm text-nvidia-gray-400 mb-4"></span>
+
+            <!-- Jetson Device -->
+            <div class="border-b border-nvidia-gray-200 pb-4 mb-4">
+              <button class="filter-section-toggle flex items-center justify-between w-full text-left py-2" data-section="jetson">
+                <span class="text-sm font-semibold text-nvidia-gray-500 uppercase tracking-wide">Jetson Device</span>
+                <svg class="w-4 h-4 text-nvidia-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div class="filter-section-content space-y-2 mt-2" id="section-jetson">
+                <label class="flex items-center gap-2 cursor-pointer group">
+                  <input type="radio" name="filter-jetson" value="" checked class="accent-nvidia-green" />
+                  <span class="text-sm text-nvidia-gray-600 group-hover:text-nvidia-black">All devices</span>
+                </label>
+                {allJetsons.map(j => (
+                  <label class="flex items-center gap-2 cursor-pointer group">
+                    <input type="radio" name="filter-jetson" value={j} class="accent-nvidia-green" />
+                    <span class="text-sm text-nvidia-gray-600 group-hover:text-nvidia-black">{j}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <!-- Source -->
+            <div class="border-b border-nvidia-gray-200 pb-4 mb-4">
+              <button class="filter-section-toggle flex items-center justify-between w-full text-left py-2" data-section="source">
+                <span class="text-sm font-semibold text-nvidia-gray-500 uppercase tracking-wide">Source</span>
+                <svg class="w-4 h-4 text-nvidia-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div class="filter-section-content space-y-2 mt-2" id="section-source">
+                <label class="flex items-center gap-2 cursor-pointer group">
+                  <input type="radio" name="filter-source" value="" checked class="accent-nvidia-green" />
+                  <span class="text-sm text-nvidia-gray-600 group-hover:text-nvidia-black">All sources</span>
+                </label>
+                {allSources.map(s => (
+                  <label class="flex items-center gap-2 cursor-pointer group">
+                    <input type="radio" name="filter-source" value={s} class="accent-nvidia-green" />
+                    <span class="text-sm text-nvidia-gray-600 group-hover:text-nvidia-black">{s}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="pb-4">
+              <button class="filter-section-toggle flex items-center justify-between w-full text-left py-2" data-section="tags">
+                <span class="text-sm font-semibold text-nvidia-gray-500 uppercase tracking-wide">Tags</span>
+                <svg class="w-4 h-4 text-nvidia-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div class="filter-section-content space-y-2 mt-2 max-h-64 overflow-y-auto" id="section-tags">
+                {allTags.map(t => (
+                  <label class="flex items-center gap-2 cursor-pointer group">
+                    <input type="checkbox" name="filter-tag" value={t} class="accent-nvidia-green" />
+                    <span class="text-sm text-nvidia-gray-600 group-hover:text-nvidia-black">{t}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Projects Grid -->
+        <div class="flex-1 min-w-0">
+          <div id="projects-grid" class="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <div id="no-results" class="hidden col-span-full py-16 text-center">
+            <p class="text-nvidia-gray-500 text-lg">No projects match the selected filters.</p>
+            <p class="text-nvidia-gray-400 text-sm mt-2">Try adjusting your filters or uncheck some tags.</p>
+          </div>
         {allProjects.map((project) => {
           const colors = sourceColors[project.data.source] || sourceColors['Other'];
           return (
-            <a href={project.data.link} target="_blank" rel="noopener" class="group bg-nvidia-gray-50 rounded-xl overflow-hidden border border-nvidia-gray-200 hover:border-nvidia-green/50 hover:shadow-lg transition-all duration-300">
+            <a href={project.data.link} target="_blank" rel="noopener"
+              class="project-card group bg-nvidia-gray-50 rounded-xl overflow-hidden border border-nvidia-gray-200 hover:border-nvidia-green/50 hover:shadow-lg transition-all duration-300"
+              data-source={project.data.source}
+              data-jetson={(project.data.jetson || []).join(',')}
+              data-tags={(project.data.tags || []).join(',')}>
               {/* Media */}
               <div class="relative aspect-video bg-nvidia-gray-100 overflow-hidden">
                 {project.data.video ? (
@@ -115,6 +198,9 @@ const sourceColors: Record<string, { bg: string; text: string }> = {
             </a>
           );
         })}
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -135,6 +221,80 @@ const sourceColors: Record<string, { bg: string; text: string }> = {
     </div>
   </section>
 </Layout>
+
+<script is:inline>
+  (function() {
+    var resetBtn = document.getElementById('filter-reset');
+    var countEl = document.getElementById('filter-count');
+    var noResults = document.getElementById('no-results');
+    var cards = document.querySelectorAll('.project-card');
+
+    function getRadioValue(name) {
+      var checked = document.querySelector('input[name="' + name + '"]:checked');
+      return checked ? checked.value : '';
+    }
+
+    function getCheckedTags() {
+      var checked = document.querySelectorAll('input[name="filter-tag"]:checked');
+      var tags = [];
+      checked.forEach(function(cb) { tags.push(cb.value); });
+      return tags;
+    }
+
+    function applyFilters() {
+      var source = getRadioValue('filter-source');
+      var jetson = getRadioValue('filter-jetson');
+      var selectedTags = getCheckedTags();
+      var visible = 0;
+
+      cards.forEach(function(card) {
+        var show = true;
+        if (source && card.dataset.source !== source) show = false;
+        if (jetson && (card.dataset.jetson || '').split(',').indexOf(jetson) === -1) show = false;
+        if (selectedTags.length > 0) {
+          var cardTags = (card.dataset.tags || '').split(',');
+          var hasAll = selectedTags.every(function(t) { return cardTags.indexOf(t) !== -1; });
+          if (!hasAll) show = false;
+        }
+
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      var hasFilters = source || jetson || selectedTags.length > 0;
+      resetBtn.classList.toggle('hidden', !hasFilters);
+      noResults.classList.toggle('hidden', visible > 0);
+      countEl.textContent = hasFilters ? 'Showing ' + visible + ' of ' + cards.length : cards.length + ' projects';
+    }
+
+    document.querySelectorAll('input[name="filter-source"], input[name="filter-jetson"], input[name="filter-tag"]').forEach(function(input) {
+      input.addEventListener('change', applyFilters);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.querySelectorAll('input[name="filter-source"][value=""], input[name="filter-jetson"][value=""]').forEach(function(r) {
+        r.checked = true;
+      });
+      document.querySelectorAll('input[name="filter-tag"]').forEach(function(cb) {
+        cb.checked = false;
+      });
+      applyFilters();
+    });
+
+    // Collapsible sections
+    document.querySelectorAll('.filter-section-toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var section = btn.dataset.section;
+        var content = document.getElementById('section-' + section);
+        var arrow = btn.querySelector('svg');
+        content.classList.toggle('hidden');
+        arrow.style.transform = content.classList.contains('hidden') ? 'rotate(-90deg)' : '';
+      });
+    });
+
+    applyFilters();
+  })();
+</script>
 
 <style>
   .line-clamp-2 {

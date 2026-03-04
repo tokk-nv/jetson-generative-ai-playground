@@ -7,7 +7,8 @@ source: "Seeed"
 link: "https://wiki.seeedstudio.com/deploy_nvblox_jetson_agx_orin/"
 image: "https://media.githubusercontent.com/media/NVIDIA-ISAAC-ROS/.github/release-4.0/resources/isaac_ros_docs/repositories_and_packages/isaac_ros_nvblox/isaac_sim_nvblox_humans.gif"
 featured: true
-tags: ["isaac-ros", "nvblox", "rgb-d", "orbbec", "robotics", "3d-mapping", "agx-orin"]
+jetson: ["Jetson AGX Orin"]
+tags: ["Robotics", "Isaac ROS", "ROS2", "Docker"]
 ---
 
 This comprehensive guide from Seeed Studio demonstrates how to deploy NVIDIA's Isaac-ROS NVBlox package for real-time 3D reconstruction and obstacle mapping using an Orbbec RGB-D camera on the Jetson AGX Orin platform.

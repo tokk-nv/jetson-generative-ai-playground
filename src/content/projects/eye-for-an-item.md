@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/ceyeber/an-eye-for-an-item-9162a7"
 video: "https://www.youtube.com/embed/KAUH67vni74"
 featured: false
-tags: ["robotics", "isaac-ros", "slam", "nanodb", "object-detection"]
+jetson: ["Jetson AGX Orin"]
+tags: ["Robotics", "Isaac ROS", "ROS2"]
 ---
 
 Allen Tao builds an indoor robot with Isaac ROS that maps your home and remembers where things are using SLAM and NanoDB!

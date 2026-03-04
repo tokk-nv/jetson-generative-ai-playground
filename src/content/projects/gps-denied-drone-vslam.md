@@ -7,7 +7,8 @@ source: "Hackster"
 image: "https://hackster.imgix.net/uploads/attachments/1860199/_3us6r87BE8.blob?auto=compress%2Cformat&w=900&h=675&fit=min"
 link: "https://www.hackster.io/bandofpv/gps-denied-drone-with-nvidia-jetson-orin-nano-9f3417"
 featured: true
-tags: ["vslam", "isaac-ros", "drone", "autonomous", "px4", "mavros", "robotics", "orin-nano"]
+jetson: ["Jetson Orin Nano"]
+tags: ["Robotics", "Isaac ROS", "ROS2", "Autonomous Driving"]
 ---
 
 Andrew Bernas developed an autonomous UAV platform powered by Visual Simultaneous Localization and Mapping (VSLAM) using Isaac ROS, integrated with MAVROS and PX4 flight stack. The system enables real-time localization and mapping for autonomous navigation in GPS-denied environments.

@@ -7,7 +7,8 @@ source: "Hackster"
 link: "https://www.hackster.io/timo614/gpt-oss-20b-storyteller-c91042"
 image: "https://hackster.imgix.net/uploads/attachments/1889223/_IGMA29ZuBT.blob?auto=compress%2Cformat&w=900&h=675&fit=min"
 featured: true
-tags: ["llm", "storytelling", "comfyui", "sdxl", "tts", "asr", "whisper", "ollama", "agx-orin"]
+jetson: ["Jetson AGX Orin"]
+tags: ["LLM", "Image Generation", "Speech"]
 ---
 
 Timothy Lovett created an interactive storytelling system for children that combines multiple AI models on Jetson AGX Orin to generate dynamic stories with accompanying visuals, voice narration, and adaptive sound effects.

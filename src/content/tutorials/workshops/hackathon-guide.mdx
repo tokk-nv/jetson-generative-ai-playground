@@ -1,0 +1,202 @@
+---
+title: "Hackathon Guide"
+description: "Everything you need to get started with NVIDIA Jetson at a hackathon. Setup tips, project ideas, and resources to help your team build an impressive AI project."
+category: "Workshops"
+section: "Hands-on Labs"
+order: 2
+tags: ["Hackathon", "Setup", "Jetson Orin Nano", "Jetson AGX Orin", "Jetson Thor", "Getting Started"]
+featured: false
+---
+
+import Tabs from '../../../components/Tabs.astro';
+
+# Hackathon Guide
+
+<img src="/images/workshops/her-blog-back-to-school-jetson-dev-kit-1080x1080.png" alt="NVIDIA Jetson Developer Kit" width="360" style="float: right; margin-left: 20px; margin-bottom: 20px;" />
+
+The NVIDIA Jetson empowers you to bring your innovative ideas to life.
+
+It's a powerful, compact edge AI computer with plenty of examples and learning resources to help your team build an impressive AI project at a hackathon. See [examples of successful hackathon projects](/community?tag=Hackathon).
+
+Explore the tips, guides, and resources below to get started and make the most of your Jetson experience.
+
+Good luck, have fun, and happy hacking!
+
+<div style="clear: both;"></div>
+
+
+## Initial Setup
+
+Ideally, your Jetson developer kit comes pre-setup. But you can also set it up yourself.
+
+<Tabs labels={["Case 1: Jetson comes pre-setup", "Case 2: You open the box for the first time"]}>
+  <div class="nv-tab-panel active">
+    <p>Check the default username and password with the person or organization who provided the hardware.</p>
+    <ul>
+      <li>Username: <code>jetson</code></li>
+      <li>Password: <code>jetson</code></li>
+    </ul>
+    <p>The system is typically set up on a <strong>microSD card</strong> (for Orin Nano), and the device may also have an <strong>NVMe SSD</strong> attached for additional storage.</p>
+    <div class="admonition tip">
+      <p class="admonition-title">💡 Tip</p>
+      <p>If an SSD is available, see <a href="/tutorials/ssd-docker-setup">SSD + Docker Setup</a> to move your Docker data directory to the SSD for faster container performance.</p>
+    </div>
+  </div>
+
+  <div class="nv-tab-panel">
+    <p>If the Jetson has not been set up, go through the initial setup guide that matches your hardware:</p>
+    <ul>
+      <li><strong>Jetson Orin Nano 8GB Developer Kit</strong> - <a href="/tutorials/initial-setup-jetson-orin-nano">Initial Setup Guide</a></li>
+      <li><strong>Jetson AGX Orin 64GB Developer Kit</strong> - <a href="/tutorials/initial-setup-sdk-manager">Initial Setup (SDK Manager)</a></li>
+    </ul>
+  </div>
+</Tabs>
+
+
+## Physical Setup
+
+<Tabs labels={["Headless setup (Recommended)", "Monitor-attached setup"]}>
+  <div class="nv-tab-panel active">
+    <p>A <strong>headless setup</strong> with Jetson's USB Device Mode provides an easy way to connect your laptop directly to a Jetson with minimal cabling.</p>
+
+    <img src="/images/workshops/usb-device-mode_Type-A.png" alt="USB Device Mode connection diagram" class="tutorial-img" style="max-width: 100%;" />
+
+    <p>Follow these steps:</p>
+    <ol>
+      <li><p>Take the Jetson developer kit out of the box and connect the bundled power supply.</p></li>
+      <li><p>Find a USB cable to connect the Jetson to your PC (USB-C end goes into the Jetson).</p></li>
+      <li><p>You should see a "L4T-README" drive automatically mounted on your PC.</p></li>
+      <li>
+        <p>Open a terminal on your PC and SSH into the Jetson:</p>
+        <pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"ssh USERNAME@192.168.55.1"}</code></pre>
+        <div class="admonition note">
+          <p class="admonition-title">📘 Note</p>
+          <p>Replace <code>USERNAME</code> with the actual username set on the device. You will be prompted for the password.</p>
+        </div>
+      </li>
+    </ol>
+
+    <details class="nv-details">
+      <summary>How USB Device Mode works</summary>
+      <div class="nv-details-content">
+        <p>When Jetson is connected to a PC, it acts as a USB Composite Device that presents several USB device classes:</p>
+        <ul>
+          <li><strong>USB Ethernet</strong> - provides a virtual NIC for SSH access</li>
+          <li><strong>USB Mass Storage</strong> - lets the PC mount the "L4T-README" drive</li>
+          <li><strong>USB Serial</strong> - provides serial console access</li>
+        </ul>
+        <p>When connected to a Windows PC, "Device Manager" in "Devices by connection" view shows something like the following:</p>
+        <img src="/images/workshops/windows_device_manager.png" alt="Windows Device Manager showing USB device mode" class="tutorial-img" style="max-width: 480px;" />
+      </div>
+    </details>
+
+    <p>You can also get Jetson on a Wi-Fi network to have Internet access and allow your team members to simultaneously access Jetson.</p>
+  </div>
+
+  <div class="nv-tab-panel">
+    <p>If you have a PC monitor, DisplayPort cable, USB keyboard, and mouse, you can use Jetson as a standalone computer and do all the work on it.</p>
+  </div>
+</Tabs>
+
+
+## Wi-Fi Connection
+
+Connect Jetson to a Wi-Fi network (especially useful in headless mode):
+
+<pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"sudo nmcli device wifi connect WIFI_SSID password WIFI_PASSWORD"}</code></pre>
+
+Replace `WIFI_SSID` and `WIFI_PASSWORD` with your actual Wi-Fi network name and password.
+
+Once connected, check the assigned IP address:
+
+<pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"ip addr"}</code></pre>
+
+Then SSH from any PC on the same network:
+
+<pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"ssh USERNAME@JETSON_WIFI_IP"}</code></pre>
+
+<div class="admonition tip">
+  <p class="admonition-title">💡 Tip</p>
+  <p>Sometimes, the Wi-Fi network policy blocks device-to-device connections (like SSH).</p>
+  <p>USB Device Mode still lets you connect via the USB cable, but limits access to one PC. If your team needs multiple PCs to access Jetson simultaneously but Wi-Fi blocks SSH, bring a <strong>portable Wi-Fi router</strong> to create a local network.</p>
+</div>
+
+
+## Example Projects
+
+There are many great AI project examples on this site. Here are a few to get you inspired:
+
+### Live VLM WebUI: Real-time Vision AI
+
+[Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui) lets you evaluate Vision Language Models in real-time with a webcam. Point your camera at objects, scenes, or text and get instant AI-powered descriptions and answers.
+
+![Live VLM WebUI](https://github.com/NVIDIA-AI-IOT/live-vlm-webui/raw/main/docs/images/chrome_app-running_light-theme.jpg)
+
+This is a great starting point for building projects that need visual understanding - from accessibility tools to interactive demos.
+
+<a href="/tutorials/live-vlm-webui" class="nv-button">Go to Live VLM WebUI tutorial →</a>
+
+### Ollama : Run LLMs Locally
+
+[Ollama](https://ollama.com/) is a popular open-source tool for running large language models locally. It has official Jetson support, letting you run models like Llama, Gemma, DeepSeek, and more entirely on-device with GPU acceleration.
+
+<a href="/tutorials/ollama" class="nv-button">Go to Ollama tutorial →</a>
+
+### More Ideas
+
+Browse the full [Tutorials](/tutorials) page for more examples across LLMs, VLMs, VLAs, image generation, speech, and robotics. Check out the [Community Projects](/community) page to see what others have built.
+
+
+## Troubleshooting
+
+<details class="nv-details">
+  <summary>Cannot SSH into Jetson after connecting USB-C cable</summary>
+  <div class="nv-details-content">
+    <ul>
+      <li>Check if the green LED near the USB-C port is lit (power indicator). If not, verify the DC power supply connection to the wall outlet and the Jetson carrier board.</li>
+      <li>Check if the "L4T-README" drive appears on your PC. If not, try a different USB-C cable or check connections on both ends.</li>
+    </ul>
+  </div>
+</details>
+
+<details class="nv-details">
+  <summary>Cannot log in with provided credentials</summary>
+  <div class="nv-details-content">
+    <ul>
+      <li>Double-check the username and password you typed.</li>
+      <li>Someone may have changed the password of the default user. If you cannot find the updated password, you may need to reflash - see the <a href="/tutorials/initial-setup-jetson-orin-nano">Initial Setup Guide</a>.</li>
+    </ul>
+  </div>
+</details>
+
+<details class="nv-details">
+  <summary>Jetson seems slow</summary>
+  <div class="nv-details-content">
+    <p>Check your power mode:</p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"nvpmodel -q"}</code></pre>
+    <p>Install <a href="https://github.com/rbonghi/jetson_stats">jtop (jetson-stats)</a> to monitor resource utilization:</p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"sudo apt install -y python3-pip\nsudo pip3 install -U jetson-stats"}</code></pre>
+    <p>The <code>CTRL</code> tab in jtop lets you change the power mode under <code>NVP modes</code>.</p>
+  </div>
+</details>
+
+<details class="nv-details">
+  <summary>How to check Jetson resource utilization in real-time?</summary>
+  <div class="nv-details-content">
+    <p>Install <a href="https://github.com/rbonghi/jetson_stats">jtop</a>:</p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px;"><code>{"sudo apt install -y python3-pip\nsudo pip3 install -U jetson-stats"}</code></pre>
+  </div>
+</details>
+
+<details class="nv-details">
+  <summary>How to power Jetson with a battery?</summary>
+  <div class="nv-details-content">
+    <p>Use a USB power bank that supports 12V output via Power Delivery (PD) with a USB PD to DC power jack adapter cable.</p>
+  </div>
+</details>
+
+
+## Resources
+
+- [NVIDIA Developer Forum - Jetson](https://forums.developer.nvidia.com/c/autonomous-machines/jetson-embedded-systems/70) - Ask questions and find answers
+- [Jetson AI Lab Discord](https://discord.gg/BmqNSK4886) - Join the community

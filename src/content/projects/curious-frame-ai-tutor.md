@@ -7,7 +7,8 @@ source: "Hackster"
 image: "https://hackster.imgix.net/uploads/attachments/1872832/_z3jxuwvChS.blob?auto=compress%2Cformat&w=900&h=675&fit=min"
 link: "https://www.hackster.io/frederic-collonval/the-curious-frame-an-offline-ai-tutor-for-kids-686677"
 featured: true
-tags: ["education", "kids", "vlm", "llm", "moondream", "gemma", "tts", "ollama", "orin-nano", "screen-free"]
+jetson: ["Jetson Orin Nano"]
+tags: ["VLM", "LLM", "Speech", "Education"]
 ---
 
 Frederic Collonval created a screen-free AI tutor for children that uses a handheld cardboard frame to identify everyday objects and explain them through voice in multiple languages, all running locally on Jetson Orin Nano.

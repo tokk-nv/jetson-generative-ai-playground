@@ -7,7 +7,8 @@ source: "YouTube"
 link: "https://www.youtube.com/watch?v=yNcKTZsHyfA"
 video: "https://www.youtube.com/embed/yNcKTZsHyfA"
 featured: true
-tags: ["robotics", "llm", "riva", "asr", "tts", "agx-orin"]
+jetson: ["Jetson AGX Orin"]
+tags: ["LLM", "Robotics", "Speech"]
 ---
 
 See how DIY robotics legend Dave Niewinski from [davesarmoury.com](https://www.davesarmoury.com/) brings GLaDOS to life using Jetson AGX Orin, running LLMs onboard alongside object + depth tracking, and RIVA ASR/TTS with a custom-trained voice model for speech recognition and synthesis!
