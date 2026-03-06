@@ -40,7 +40,7 @@ Before setting up OpenClaw, we need to host a model locally. For this tutorial w
 
 Any model should work here as long as it's capable of **tool calling**. Tool calling is very important for OpenClaw. It's how the agent takes actions on your behalf.
 
-> **Tip:** In our testing, we found **Mixture of Experts (MoE)** models work exceptionally well with OpenClaw, models like **Nemotron 3 Nano 30B-A3B**, **Grace 3.5 35B-A3B**, and **GLM 4.7 Flash**. That said, any model that supports tool calling should work. Just make sure you serve it correctly with vLLM so it can handle tool use without messing up the output format.
+> **Tip:** In our testing, we found **Mixture of Experts (MoE)** models work exceptionally well with OpenClaw, models like **Nemotron 3 Nano 30B-A3B**, **Qwen 3.5 35B-A3B**, and **GLM 4.7 Flash**. That said, any model that supports tool calling should work. Just make sure you serve it correctly with vLLM so it can handle tool use without messing up the output format.
 
 ### Export your Hugging Face token
 
@@ -68,7 +68,7 @@ sudo docker run -it --rm --pull always \
   -e VLLM_USE_FLASHINFER_MOE_FP4=1 \
   -e VLLM_FLASHINFER_MOE_BACKEND=throughput \
   -v $HOME/.cache/huggingface:/root/.cache/huggingface \
-  ghcr.io/nvidia-ai-iot vllm:latest-jetson-thor \
+  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor \
   bash -c "wget -q -O /tmp/nano_v3_reasoning_parser.py \
   --header=\"Authorization: Bearer \$HF_TOKEN\" \
   https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4/resolve/main/nano_v3_reasoning_parser.py \
