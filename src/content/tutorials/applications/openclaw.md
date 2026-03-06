@@ -1,5 +1,5 @@
 ---
-title: "OpenClaw + WhatsApp on Jetson"
+title: "OpenClaw on Jetson"
 description: "Run a fully local AI personal assistant on Jetson with OpenClaw and WhatsApp, no cloud APIs needed."
 category: "Applications"
 section: "AI Agents"
