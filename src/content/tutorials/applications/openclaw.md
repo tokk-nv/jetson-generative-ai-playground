@@ -109,6 +109,12 @@ sudo docker run -it --rm --pull always \
 </div>
 </div>
 
+> **Tip:** These models need a lot of memory. Before serving, make sure you don't have other processes eating up GPU memory. It's always a good idea to clear the memory cache first to ensure you have as much free memory as possible:
+>
+> ```bash
+> sudo sysctl -w vm.drop_caches=3
+> ```
+
 > **Note:** You will need an **AGX Thor** or **AGX Orin** to run the models mentioned above. If you're on a different Jetson (like Orin Nano Super), any smaller model should work fine as long as it supports tool calling, however it may not be as capable as these larger models.
 
 ### Verify the model is serving
