@@ -65,7 +65,7 @@ You will need an [NGC account](https://ngc.nvidia.com/) with access to the `nim`
 ```bash
 ngc registry model download-version "nim/nvidia/cosmos-reason2-2b:1208-fp8-static-kv8" \
   --dest ~/.cache/huggingface/hub
-MODEL_PATH="$(home)/.cache/huggingface/hub"
+MODEL_PATH="$(home)/.cache/huggingface/hub/cosmos-reason2-2b_v1208-fp8-static-kv8"
 ```
 
 ### Step 3: Serve
@@ -84,8 +84,8 @@ sudo sysctl -w vm.drop_caches=3
 sudo docker run -it --rm --runtime=nvidia --network host \
   -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
   ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04 \
-  vllm serve /models/cosmos-reason2-8b \
-    --model nvidia/cosmos-reason2-2b-fp8 \
+  vllm serve /models/cosmos-reason2-2b \
+    --served-model-name nvidia/cosmos-reason2-8b-fp8 \
     --max-model-len 8192 \
     --gpu-memory-utilization 0.8 \
     --reasoning-parser qwen3 \
