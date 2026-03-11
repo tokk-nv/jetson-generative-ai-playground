@@ -45,7 +45,7 @@ supported_inference_engines:
 - Generated text with chain-of-thought reasoning traces
 - Spatial analysis, anomaly detection results, and scene descriptions
 
-## Running with vLLM  
+## Running with vLLM
 
 The vLLM path uses an [FP8 quantized checkpoint from NGC](https://catalog.ngc.nvidia.com/orgs/nim/teams/nvidia/models/cosmos-reason2-2b/files?version=1208-fp8-static-kv8) downloaded via the NGC CLI.
 
@@ -63,8 +63,9 @@ You will need an [NGC account](https://ngc.nvidia.com/) with access to the `nim`
 ### Step 2: Download the FP8 Model
 
 ```bash
-ngc registry model download-version "nim/nvidia/cosmos-reason2-2b:1208-fp8-static-kv8"
-MODEL_PATH="$(pwd)/cosmos-reason2-2b_v1208-fp8-static-kv8"
+ngc registry model download-version "nim/nvidia/cosmos-reason2-2b:1208-fp8-static-kv8" \
+  --dest ~/.cache/huggingface/hub
+MODEL_PATH="$(home)/.cache/huggingface/hub/cosmos-reason2-2b_v1208-fp8-static-kv8"
 ```
 
 ### Step 3: Serve
@@ -82,10 +83,15 @@ sudo sysctl -w vm.drop_caches=3
 
 sudo docker run -it --rm --runtime=nvidia --network host \
   -v $MODEL_PATH:/models/cosmos-reason2-2b:ro \
-  ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor \
+  ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04 \
   vllm serve /models/cosmos-reason2-2b \
-    --max-model-len 8192 --gpu-memory-utilization 0.8 --reasoning-parser qwen3 \
-    --media-io-kwargs '{"video": {"num_frames": -1}}'
+    --served-model-name nvidia/cosmos-reason2-8b-fp8 \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.8 \
+    --reasoning-parser qwen3 \
+    --media-io-kwargs '{"video": {"num_frames": -1}}' \
+    --enable-prefix-caching \
+    --port 8000
 ```
 
 </div>
