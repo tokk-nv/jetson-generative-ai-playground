@@ -2,7 +2,7 @@
 title: "Qwen3 30B-A3B (MoE)"
 model_id: "qwen3-30b-a3b"
 short_description: "Alibaba's Mixture-of-Experts model with 30B total / 3B active parameters"
-family: "Qwen Qwen3"
+family: "Alibaba Qwen3"
 icon: "🔮"
 is_new: false
 order: 3
@@ -44,4 +44,3 @@ Qwen3 30B-A3B is a Mixture-of-Experts (MoE) model from Alibaba Cloud's Qwen3 fam
 - **Subject Matter Experts**: Fine-tuning for domain-specific expertise
 - **Multilingual Instruction Following**: Following instructions across 100+ languages
 - **Translation**: High-quality translation between supported languages
-
