@@ -2,7 +2,7 @@
 title: "Qwen3 8B"
 model_id: "qwen3-8b"
 short_description: "Alibaba's powerful 8 billion parameter instruction-tuned language model"
-family: "Qwen Qwen3"
+family: "Alibaba Qwen3"
 icon: "🔮"
 is_new: false
 order: 2
@@ -44,4 +44,3 @@ Qwen3 8B is a more powerful variant in Alibaba Cloud's latest generation of larg
 - **Subject Matter Experts**: Fine-tuning for domain-specific expertise
 - **Multilingual Instruction Following**: Following instructions across 100+ languages
 - **Translation**: High-quality translation between supported languages
-

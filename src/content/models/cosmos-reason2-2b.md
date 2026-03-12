@@ -4,7 +4,7 @@ model_id: "cosmos-reason2-2b"
 short_description: "NVIDIA's compact 2B parameter vision-language model with built-in chain-of-thought reasoning for edge deployment"
 family: "NVIDIA Cosmos Reason"
 icon: "🧠"
-is_new: true
+is_new: false
 order: 3
 type: "Multimodal"
 memory_requirements: "8GB RAM"

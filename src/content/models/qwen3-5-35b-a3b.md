@@ -2,7 +2,7 @@
 title: "Qwen3.5 35B-A3B (MoE)"
 model_id: "qwen3-5-35b-a3b"
 short_description: "Alibaba's latest Mixture-of-Experts model with 35B total / 3B active parameters, featuring native tool calling and MTP speculative decoding"
-family: "Qwen Qwen3.5"
+family: "Alibaba Qwen3.5"
 icon: "🔮"
 is_new: true
 order: 1

@@ -2,7 +2,7 @@
 title: "Qwen3 VL 4B"
 model_id: "qwen3-vl-4b"
 short_description: "Alibaba's 4 billion parameter vision-language model for multimodal understanding"
-family: "Qwen Qwen3"
+family: "Alibaba Qwen3"
 icon: "🔮"
 is_new: false
 order: 5
@@ -37,4 +37,3 @@ Available in Dense and MoE architectures that scale from edge to cloud, with Ins
 - **Text Understanding on par with pure LLMs**: Seamless text–vision fusion for lossless, unified comprehension.
 
 *Referenced from the [Qwen3-VL model card](https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct).*
-

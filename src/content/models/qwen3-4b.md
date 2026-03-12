@@ -2,7 +2,7 @@
 title: "Qwen3 4B"
 model_id: "qwen3-4b"
 short_description: "Alibaba's efficient 4 billion parameter instruction-tuned language model"
-family: "Qwen Qwen3"
+family: "Alibaba Qwen3"
 icon: "🔮"
 is_new: false
 order: 1
@@ -44,4 +44,3 @@ Qwen3 is Alibaba Cloud's latest generation of large language models, offering st
 - **Subject Matter Experts**: Fine-tuning for domain-specific expertise
 - **Multilingual Instruction Following**: Following instructions across 100+ languages
 - **Translation**: High-quality translation between supported languages
-

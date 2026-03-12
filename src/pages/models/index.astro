@@ -32,10 +32,11 @@ const familyOrder: Record<string, number> = {
   'Google Gemma3': 0,
   'NVIDIA Nemotron': 1,
   'NVIDIA Cosmos Reason': 2,
-  'OpenAI GPT OSS': 3,
-  'Qwen Qwen3': 4,
-  'Mistral AI Ministral 3': 5,
-  'Meta Llama 3': 6,
+  'Alibaba Qwen3.5': 3,
+  'OpenAI GPT OSS': 4,
+  'Alibaba Qwen3': 5,
+  'Mistral AI Ministral 3': 6,
+  'Meta Llama 3': 7,
 };
 const families = Array.from(new Set(models.map(m => m.family)))
   .sort((a, b) => (familyOrder[a] ?? 99) - (familyOrder[b] ?? 99));
