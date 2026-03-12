@@ -1,12 +1,12 @@
 ---
 title: "Qwen3.5 9B"
 model_id: "qwen3-5-9b"
-short_description: "Alibaba's dense Qwen3.5 9B language model with Jetson-specific checkpoints for Orin and Thor"
+short_description: "Alibaba's dense Qwen3.5 9B vision-language model with Jetson-specific checkpoints for Orin and Thor"
 family: "Alibaba Qwen3.5"
 icon: "🔮"
 is_new: true
 order: 3
-type: "Text"
+type: "Multimodal"
 memory_requirements: "8GB RAM"
 precision: "NVFP4 / W4A16"
 model_size: "5GB"
@@ -20,18 +20,18 @@ supported_inference_engines:
     run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor vllm serve Kbenkhaled/Qwen3.5-9B-NVFP4 --gpu-memory-utilization 0.8 --enable-prefix-caching --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder"
 ---
 
-Qwen3.5 9B is a dense language model in the Qwen3.5 family aimed at stronger reasoning, coding, and agentic behavior while remaining deployable on Jetson. This entry uses a W4A16 checkpoint on Jetson Orin and an NVFP4 checkpoint on Jetson Thor.
+Qwen3.5 9B is a dense vision-language model in the Qwen3.5 family aimed at stronger reasoning, visual understanding, and agentic behavior on Jetson. This entry uses a W4A16 checkpoint on Jetson Orin and an NVFP4 checkpoint on Jetson Thor.
 
 ## Inputs and Outputs
 
-**Input:** Text
+**Input:** Text and images
 
 **Output:** Text
 
 ## Intended Use Cases
 
-- **Reasoning**: More capable long-form reasoning than smaller edge models
-- **Coding**: Programming assistance and code generation
+- **Visual reasoning**: Stronger multimodal reasoning over image and text inputs
+- **Image understanding**: Detailed captioning, scene description, and analysis
 - **Tool calling**: Native Qwen tool-call parsing in vLLM
 - **Agents**: Local assistants and workflow automation
 

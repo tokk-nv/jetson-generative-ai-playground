@@ -1,12 +1,12 @@
 ---
 title: "Qwen3.5 0.8B"
 model_id: "qwen3-5-0-8b"
-short_description: "Alibaba's compact Qwen3.5 language model for lightweight edge deployment"
+short_description: "Alibaba's compact Qwen3.5 vision-language model for lightweight multimodal deployment"
 family: "Alibaba Qwen3.5"
 icon: "🔮"
 is_new: false
 order: 5
-type: "Text"
+type: "Multimodal"
 memory_requirements: "2GB RAM"
 precision: "BF16"
 model_size: "1.7GB"
@@ -20,20 +20,20 @@ supported_inference_engines:
     run_command_thor: "sudo docker run -it --rm --pull always --runtime=nvidia --network host ghcr.io/nvidia-ai-iot/vllm:latest-jetson-thor vllm serve Qwen/Qwen3.5-0.8B --gpu-memory-utilization 0.8 --enable-prefix-caching --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder"
 ---
 
-Qwen3.5 0.8B is the smallest text model in the Qwen3.5 lineup. It is designed for lightweight local inference, fast iteration, and low-memory deployments on Jetson.
+Qwen3.5 0.8B is the smallest vision-language model in the Qwen3.5 lineup. It is designed for lightweight local multimodal inference, fast iteration, and efficient Jetson deployment.
 
 ## Inputs and Outputs
 
-**Input:** Text
+**Input:** Text and images
 
 **Output:** Text
 
 ## Intended Use Cases
 
-- **Lightweight chat**: Low-latency conversational inference
-- **Edge automation**: Small assistants and embedded agents
+- **Visual question answering**: Ask questions about images and receive text responses
+- **Image understanding**: Captioning, scene description, and visual analysis
 - **Tool calling**: OpenAI-compatible tool use via vLLM
-- **Rapid prototyping**: Quick local experiments on constrained devices
+- **Rapid prototyping**: Quick local multimodal experiments
 
 ## Additional Resources
 
